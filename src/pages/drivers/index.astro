@@ -3,13 +3,15 @@ import Layout from '../../layouts/Layout.astro';
 import drivers from '../../../public/data/drivers.json';
 import teams from '../../../public/data/teams.json';
 import results from '../../../public/data/results.json';
+import qualifying from '../../../public/data/qualifying.json';
 
 const driversWithStats = drivers.map((driver: any) => {
   const team = teams.find((t: any) => t.id === driver.teamId);
   const driverResults = results.filter((r: any) => r.driverId === driver.id);
+  const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
   const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
   const wins = driverResults.filter((r: any) => r.position === 1).length;
-  const poles = driverResults.filter((r: any) => r.pole).length;
+  const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).length;
   
   return { ...driver, team, totalPoints, wins, poles };
 });
