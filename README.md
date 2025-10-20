@@ -9,7 +9,7 @@ A modern karting championship tracking website built with **Astro** and **Tailwi
 - 👥 **Team Management** - View teams with their drivers and accumulated points
 - 🏁 **Race Calendar** - Browse all races with circuit information
 - 📊 **Race Results** - Detailed results for each completed race
-- ⚙️ **Admin Panel** - Add and update race results (demo mode)
+- ⚙️ **Admin Panel** - Password-protected admin interface for managing race results and qualifying
 
 ## Tech Stack
 
@@ -134,15 +134,43 @@ The default F1 points system is used:
 
 ## Admin Panel
 
-The admin panel (`/admin`) allows you to:
+### Accessing the Admin Panel
 
-- Select a race
-- Select a driver
-- Enter position, points, fastest lap
-- Mark pole position
-- View current results for any race
+1. Navigate to `/admin-login`
+2. Enter the password (default: `admin123`)
+3. You'll be automatically redirected to `/admin`
 
-**Note:** Changes in the admin panel are demo-only and not persisted to the JSON files. To persist changes, you need to manually update the JSON files or implement a backend API.
+### Changing the Admin Password
+
+Edit the `.env` file in the project root:
+
+```env
+PUBLIC_ADMIN_PASSWORD=your-secure-password
+```
+
+### Admin Features
+
+The admin panel allows you to:
+
+- **Race Results Tab:**
+  - Select a race from the dropdown
+  - Drag and drop drivers to set finishing positions
+  - Points are automatically calculated (top 10: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1)
+  - Add fastest lap times for each driver
+  - Mark drivers as DNF (Did Not Finish)
+  - +1 bonus point awarded for fastest lap (if driver finished)
+  - Save changes to persist results
+
+- **Qualifying Tab:**
+  - Select a race from the dropdown
+  - Drag and drop drivers to set grid positions
+  - Enter lap times for each driver
+  - Mark drivers as DNF
+  - Save changes to persist qualifying results
+
+### Security Note
+
+The current implementation uses client-side password protection stored in session storage. This is suitable for personal/hobby projects. For production applications with sensitive data, implement server-side authentication.
 
 ## Design
 
