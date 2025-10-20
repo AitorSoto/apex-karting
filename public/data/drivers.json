@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Aitor Soto",
+    "number": 21,
+    "teamId": 1,
+    "nationality": "ESP",
+    "image": "/images/drivers/sainz.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Ethan Córdoba",
+    "number": 16,
+    "teamId": 1,
+    "nationality": "ESP",
+    "image": "/images/drivers/leclerc.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Héctor Chicharro",
+    "number": 13,
+    "teamId": 2,
+    "nationality": "ESP",
+    "image": "/images/drivers/verstappen.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Esteban Brito",
+    "number": 17,
+    "teamId": 2,
+    "nationality": "ESP",
+    "image": "/images/drivers/perez.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Álvaro Sánchez",
+    "number": 6,
+    "teamId": 3,
+    "nationality": "ESP",
+    "image": "/images/drivers/hamilton.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Lucas Lupori",
+    "number": 63,
+    "teamId": 3,
+    "nationality": "ARG",
+    "image": "/images/drivers/russell.jpg"
+  }
+]

@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+import drivers from '../../public/data/drivers.json';
+import teams from '../../public/data/teams.json';
+import results from '../../public/data/results.json';
+import qualifying from '../../public/data/qualifying.json';
+
+// Calculate driver standings
+const driverStandings = drivers.map((driver: any) => {
+  const driverResults = results.filter((r: any) => r.driverId === driver.id);
+  const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
+  const wins = driverResults.filter((r: any) => r.position === 1 && !r.dnf).length;
+  const podiums = driverResults.filter((r: any) => r.position <= 3 && !r.dnf).length;
+  const poles = qualifying.filter((q: any) => q.driverId === driver.id && q.position === 1 && !q.dnf).length;
+  
+  return {
+    ...driver,
+    points: totalPoints,
+    wins,
+    podiums,
+    poles
+  };
+}).sort((a: any, b: any) => b.points - a.points);
+
+// Calculate team standings
+const teamStandings = teams.map((team: any) => {
+  const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
+  const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
+    const driverResults = results.filter((r: any) => r.driverId === driver.id);
+    return sum + driverResults.reduce((s: number, r: any) => s + r.points, 0);
+  }, 0);
+  
+  return {
+    ...team,
+    points: teamPoints
+  };
+}).sort((a: any, b: any) => b.points - a.points);
+---
+
+<Layout title="Standings - Apex Karting">
+  <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
+    CHAMPIONSHIP STANDINGS
+  </h1>
+
+  <div class="space-y-12">
+    <!-- Driver Standings -->
+    <div>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Driver Standings</h2>
+      <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
+        <table class="w-full min-w-[600px]">
+          <thead class="bg-red-600">
+            <tr>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Driver</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Wins</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Podiums</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Poles</th>
+            </tr>
+          </thead>
+          <tbody>
+            {driverStandings.map((driver: any, index: number) => {
+              const team = teams.find((t: any) => t.id === driver.teamId);
+              return (
+                <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+                  <td class="px-6 py-4 font-bold text-2xl" style={`color: ${index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white'}`}>
+                    {index + 1}
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href={`/drivers/${driver.id}`} class="font-bold hover:text-red-500 transition-colors">
+                      {driver.name}
+                    </a>
+                    <div class="text-sm text-zinc-400">#{driver.number}</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm" style={`color: ${team?.color}`}>{team?.name}</span>
+                  </td>
+                  <td class="px-6 py-4 text-center font-bold text-xl">{driver.points}</td>
+                  <td class="px-6 py-4 text-center">{driver.wins}</td>
+                  <td class="px-6 py-4 text-center">{driver.podiums}</td>
+                  <td class="px-6 py-4 text-center">{driver.poles}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Team Standings -->
+    <div>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Team Standings</h2>
+      <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
+        <table class="w-full min-w-[400px]">
+          <thead class="bg-red-600">
+            <tr>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamStandings.map((team: any, index: number) => (
+              <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+                <td class="px-6 py-4 font-bold text-2xl" style={`color: ${index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white'}`}>
+                  {index + 1}
+                </td>
+                <td class="px-6 py-4">
+                  <a href={`/teams/${team.id}`} class="font-bold hover:text-red-500 transition-colors flex items-center gap-2">
+                    <span class="w-4 h-4 rounded" style={`background-color: ${team.color}`}></span>
+                    {team.name}
+                  </a>
+                </td>
+                <td class="px-6 py-4 text-center font-bold text-xl">{team.points}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</Layout>

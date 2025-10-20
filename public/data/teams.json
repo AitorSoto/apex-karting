@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Red Flag Racing",
+    "color": "#DC0000",
+    "logo": "/images/teams/ferrari.png"
+  },
+  {
+    "id": 2,
+    "name": "Max Bull Racing",
+    "color": "#0600EF",
+    "logo": "/images/teams/redbull.png"
+  },
+  {
+    "id": 3,
+    "name": "Toto Smash Racing",
+    "color": "#00D2BE",
+    "logo": "/images/teams/mercedes.png"
+  }
+]

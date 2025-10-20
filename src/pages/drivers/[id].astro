@@ -1,0 +1,116 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import driversData from '../../../public/data/drivers.json';
+import teams from '../../../public/data/teams.json';
+import results from '../../../public/data/results.json';
+import qualifying from '../../../public/data/qualifying.json';
+import races from '../../../public/data/races.json';
+import circuits from '../../../public/data/circuits.json';
+
+export async function getStaticPaths() {
+  return driversData.map((driver: any) => ({
+    params: { id: driver.id.toString() },
+  }));
+}
+
+const { id } = Astro.params;
+const drivers = driversData;
+
+const driver = drivers.find((d: any) => d.id === parseInt(id));
+const team = teams.find((t: any) => t.id === driver.teamId);
+const driverResults = results.filter((r: any) => r.driverId === driver.id);
+const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
+
+const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
+const wins = driverResults.filter((r: any) => r.position === 1 && !r.dnf).length;
+const podiums = driverResults.filter((r: any) => r.position <= 3 && !r.dnf).length;
+const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).length;
+
+const raceHistory = driverResults.map((result: any) => {
+  const race = races.find((r: any) => r.id === result.raceId);
+  const circuit = circuits.find((c: any) => c.id === race?.circuitId);
+  const qualyResult = driverQualifying.find((q: any) => q.raceId === result.raceId);
+  const hadPole = qualyResult?.position === 1 && !qualyResult?.dnf;
+  return { ...result, race, circuit, hadPole };
+}).sort((a: any, b: any) => a.race.round - b.race.round);
+---
+
+<Layout title={`${driver.name} - Apex Karting`}>
+  <a href="/drivers" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
+    ← Back to Drivers
+  </a>
+
+  <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="text-6xl font-black text-zinc-700 mb-4">#{driver.number}</div>
+        <h1 class="text-5xl font-black mb-4">{driver.name}</h1>
+        <div class="flex items-center gap-3 mb-6">
+          <span class="w-4 h-4 rounded" style={`background-color: ${team.color}`}></span>
+          <span class="text-xl" style={`color: ${team.color}`}>{team.name}</span>
+        </div>
+        <div class="text-zinc-400 text-lg">
+          <span class="font-bold">Nationality:</span> {driver.nationality}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
+      <div class="text-4xl font-black text-red-500 mb-2">{totalPoints}</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Total Points</div>
+    </div>
+    <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
+      <div class="text-4xl font-black text-red-500 mb-2">{wins}</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Wins</div>
+    </div>
+    <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
+      <div class="text-4xl font-black text-red-500 mb-2">{podiums}</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Podiums</div>
+    </div>
+    <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
+      <div class="text-4xl font-black text-red-500 mb-2">{poles}</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Pole Positions</div>
+    </div>
+  </div>
+
+  <!-- Race History -->
+  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Race History</h2>
+  <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
+    <table class="w-full">
+      <thead class="bg-red-600">
+        <tr>
+          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Round</th>
+          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Race</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Position</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Fastest Lap</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Pole</th>
+        </tr>
+      </thead>
+      <tbody>
+        {raceHistory.map((result: any) => (
+          <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+            <td class="px-6 py-4 font-bold">{result.race.round}</td>
+            <td class="px-6 py-4">
+              <div class="font-bold">{result.race.name}</div>
+              <div class="text-sm text-zinc-400">{result.circuit.name}</div>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <span class={`font-bold text-xl ${result.dnf ? 'text-red-500' : result.position === 1 ? 'text-yellow-500' : result.position === 2 ? 'text-gray-400' : result.position === 3 ? 'text-orange-600' : ''}`}>
+                {result.dnf ? 'DNF' : result.position}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-center font-bold">{result.points}</td>
+            <td class="px-6 py-4 text-center font-mono text-sm">{result.fastestLap}</td>
+            <td class="px-6 py-4 text-center">
+              {result.hadPole && <span class="text-red-500 font-bold">✓</span>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</Layout>

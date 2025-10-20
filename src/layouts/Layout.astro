@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Apex Karting Championship" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-zinc-950 text-white min-h-screen">
+    <nav class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 border-b-4 border-red-500 shadow-xl">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-2xl md:text-3xl font-black tracking-wider">
+            <span class="text-white">APEX</span>
+            <span class="text-red-300">KARTING</span>
+          </a>
+          
+          <!-- Mobile menu button -->
+          <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          
+          <!-- Desktop menu -->
+          <div class="hidden md:flex gap-6">
+            <a href="/" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Home</a>
+            <a href="/standings" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Standings</a>
+            <a href="/qualifying" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Qualifying</a>
+            <a href="/drivers" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Drivers</a>
+            <a href="/teams" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Teams</a>
+            <a href="/races" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Races</a>
+            <a href="/admin" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Admin</a>
+          </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2 flex flex-col gap-3">
+          <a href="/" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Home</a>
+          <a href="/standings" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Standings</a>
+          <a href="/qualifying" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Qualifying</a>
+          <a href="/drivers" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Drivers</a>
+          <a href="/teams" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Teams</a>
+          <a href="/races" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Races</a>
+          <a href="/admin" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Admin</a>
+        </div>
+      </div>
+    </nav>
+    <main class="container mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <footer class="bg-zinc-900 border-t-2 border-red-600 mt-16">
+      <div class="container mx-auto px-4 py-6 text-center text-zinc-400">
+        <p class="text-sm">&copy; 2025 Apex Karting Championship. All rights reserved.</p>
+      </div>
+    </footer>
+    
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      mobileMenuBtn?.addEventListener('click', () => {
+        mobileMenu?.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

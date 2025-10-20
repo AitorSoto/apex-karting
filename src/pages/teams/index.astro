@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import drivers from '../../../public/data/drivers.json';
+import teams from '../../../public/data/teams.json';
+import results from '../../../public/data/results.json';
+
+const teamsWithStats = teams.map((team: any) => {
+  const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
+  const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
+    const driverResults = results.filter((r: any) => r.driverId === driver.id);
+    return sum + driverResults.reduce((s: number, r: any) => s + r.points, 0);
+  }, 0);
+  
+  return { ...team, drivers: teamDrivers, points: teamPoints };
+});
+---
+
+<Layout title="Teams - Apex Karting">
+  <h1 class="text-3xl md:text-5xl font-black mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
+    TEAMS
+  </h1>
+
+  <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+    {teamsWithStats.map((team: any) => (
+      <a href={`/teams/${team.id}`} class="block bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 hover:border-red-600 transition-all group">
+        <div class="flex items-center p-8">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mr-8" style={`background-color: ${team.color}20; border: 4px solid ${team.color}`}>
+            <span class="text-3xl font-black" style={`color: ${team.color}`}>
+              {team.name.charAt(0)}
+            </span>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-bold mb-2 group-hover:text-red-500 transition-colors">{team.name}</h2>
+            <div class="flex gap-4 mb-4">
+              {team.drivers.map((driver: any) => (
+                <div class="text-zinc-400">
+                  <span class="font-bold text-white">#{driver.number}</span> {driver.name}
+                </div>
+              ))}
+            </div>
+            <div class="text-zinc-400">
+              <span class="font-bold text-2xl text-white">{team.points}</span> points
+            </div>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</Layout>

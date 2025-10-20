@@ -1,0 +1,679 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Admin - Apex Karting">
+  <h1 class="text-3xl md:text-5xl font-black mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
+    ADMIN PANEL
+  </h1>
+
+  <!-- Tab Navigation -->
+  <div class="flex gap-2 md:gap-4 mb-6 md:mb-8">
+    <button id="tabRaceResults" class="px-4 md:px-6 py-2 md:py-3 bg-red-600 rounded font-bold uppercase text-xs md:text-sm transition-colors">Race Results</button>
+    <button id="tabQualifying" class="px-4 md:px-6 py-2 md:py-3 bg-zinc-700 hover:bg-zinc-600 rounded font-bold uppercase text-xs md:text-sm transition-colors">Qualifying</button>
+  </div>
+
+  <!-- Race Results Tab -->
+  <div id="raceResultsTab" class="bg-zinc-900 rounded-lg p-4 md:p-8 border-2 border-zinc-800">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Manage Race Results</h2>
+    
+    <div class="space-y-6">
+      <!-- Race Selection -->
+      <div>
+        <label class="block text-sm font-bold mb-2 uppercase">Select Race</label>
+        <select id="raceSelect" class="w-full bg-zinc-800 border-2 border-zinc-700 rounded px-4 py-3 text-white focus:border-red-600 focus:outline-none">
+          <option value="">Loading races...</option>
+        </select>
+      </div>
+
+      <!-- Point System Info -->
+      <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-700">
+        <h3 class="font-bold text-sm uppercase mb-2 text-red-500">Point System</h3>
+        <p class="text-sm text-zinc-400">Points are automatically calculated: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 (top 10)</p>
+      </div>
+
+      <!-- Drag and Drop Interface -->
+      <div id="raceResultsEditor" class="hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+          <h3 class="text-lg md:text-xl font-bold">Drag to Reorder Drivers</h3>
+          <button id="saveRaceResults" class="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-green-600 hover:bg-green-700 rounded font-bold uppercase text-sm transition-colors">
+            Save All Changes
+          </button>
+        </div>
+        
+        <div class="bg-zinc-800 rounded-lg p-4 mb-4 border border-zinc-700">
+          <p class="text-sm text-zinc-400">💡 <strong>Tip:</strong> Drag drivers to reorder them. Position and points update automatically!</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+          <!-- Available Drivers -->
+          <div class="bg-zinc-800 rounded-lg p-4">
+            <h4 class="font-bold mb-3 text-red-500 uppercase text-sm">Available Drivers</h4>
+            <div id="availableDrivers" class="space-y-2 min-h-[200px]">
+            </div>
+          </div>
+
+          <!-- Race Results (Draggable) -->
+          <div class="bg-zinc-800 rounded-lg p-4">
+            <h4 class="font-bold mb-3 text-green-500 uppercase text-sm">Race Order (Drag Here)</h4>
+            <div id="raceResultsList" class="space-y-2 min-h-[200px]">
+            </div>
+          </div>
+        </div>
+
+        <!-- Fastest Lap & Pole Section -->
+        <div id="raceDetails" class="mt-6 bg-zinc-800 rounded-lg p-4 hidden">
+          <h4 class="font-bold mb-4 text-red-500 uppercase text-sm">Race Details</h4>
+          <div class="space-y-4" id="raceDetailsContent">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="raceMessage" class="mt-6 p-4 rounded hidden"></div>
+  </div>
+
+  <!-- Qualifying Tab -->
+  <div id="qualifyingTab" class="bg-zinc-900 rounded-lg p-4 md:p-8 border-2 border-zinc-800 hidden">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Manage Qualifying Results</h2>
+    
+    <div class="space-y-6">
+      <!-- Race Selection -->
+      <div>
+        <label class="block text-sm font-bold mb-2 uppercase">Select Race</label>
+        <select id="qualyRaceSelect" class="w-full bg-zinc-800 border-2 border-zinc-700 rounded px-4 py-3 text-white focus:border-red-600 focus:outline-none">
+          <option value="">Loading races...</option>
+        </select>
+      </div>
+
+      <!-- Drag and Drop Qualifying Interface -->
+      <div id="qualifyingEditor" class="hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+          <h3 class="text-lg md:text-xl font-bold">Drag to Set Qualifying Order</h3>
+          <button id="saveQualifying" class="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-green-600 hover:bg-green-700 rounded font-bold uppercase text-sm transition-colors">
+            Save All Changes
+          </button>
+        </div>
+        
+        <div class="bg-zinc-800 rounded-lg p-4 mb-4 border border-zinc-700">
+          <p class="text-sm text-zinc-400">💡 <strong>Tip:</strong> Drag drivers to set grid positions, then add lap times below.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+          <!-- Available Drivers -->
+          <div class="bg-zinc-800 rounded-lg p-4">
+            <h4 class="font-bold mb-3 text-red-500 uppercase text-sm">Available Drivers</h4>
+            <div id="qualyAvailableDrivers" class="space-y-2 min-h-[200px]">
+            </div>
+          </div>
+
+          <!-- Qualifying Order (Draggable) -->
+          <div class="bg-zinc-800 rounded-lg p-4">
+            <h4 class="font-bold mb-3 text-yellow-500 uppercase text-sm">Grid Order (Drag Here)</h4>
+            <div id="qualifyingList" class="space-y-2 min-h-[200px]">
+            </div>
+          </div>
+        </div>
+
+        <!-- Lap Times Section -->
+        <div id="qualyDetails" class="mt-6 bg-zinc-800 rounded-lg p-4 hidden">
+          <h4 class="font-bold mb-4 text-red-500 uppercase text-sm">Lap Times</h4>
+          <div class="space-y-4" id="qualyDetailsContent">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="qualyMessage" class="mt-6 p-4 rounded hidden"></div>
+  </div>
+
+</Layout>
+
+<script is:inline src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+
+<script>
+  let races = [];
+  let drivers = [];
+  let teams = [];
+  let results = [];
+  let qualifying = [];
+  let currentTab = 'race';
+  let currentRaceId = null;
+  let currentQualyRaceId = null;
+  let raceSortable = null;
+  let qualySortable = null;
+
+  // Point system: top 10 positions
+  const POINTS_SYSTEM = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+
+  async function loadData() {
+    try {
+      [races, drivers, teams, results, qualifying] = await Promise.all([
+        fetch('/data/races.json').then(r => r.json()),
+        fetch('/data/drivers.json').then(r => r.json()),
+        fetch('/data/teams.json').then(r => r.json()),
+        fetch('/data/results.json').then(r => r.json()),
+        fetch('/data/qualifying.json').then(r => r.json())
+      ]);
+
+      const raceSelect = document.getElementById('raceSelect') as HTMLSelectElement;
+      const qualyRaceSelect = document.getElementById('qualyRaceSelect') as HTMLSelectElement;
+
+      const raceOptions = '<option value="">Select a race</option>' + 
+        races.map(race => {
+          const statusBadge = race.status === 'completed' ? '✓' : '○';
+          return `<option value="${race.id}">${statusBadge} Round ${race.round}: ${race.name}</option>`;
+        }).join('');
+
+      raceSelect.innerHTML = raceOptions;
+      qualyRaceSelect.innerHTML = raceOptions;
+    } catch (error) {
+      showMessage('Error loading data: ' + error, 'race');
+    }
+  }
+
+  function calculatePoints(position: number, dnf: boolean = false): number {
+    if (dnf) return 0;
+    if (position > 0 && position <= POINTS_SYSTEM.length) {
+      return POINTS_SYSTEM[position - 1];
+    }
+    return 0;
+  }
+
+  function showMessage(text: string, tab: 'race' | 'qualy') {
+    const messageId = tab === 'race' ? 'raceMessage' : 'qualyMessage';
+    const message = document.getElementById(messageId)!;
+    const type = text.includes('success') ? 'success' : 'error';
+    message.textContent = text;
+    message.className = `mt-6 p-4 rounded ${type === 'success' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`;
+    message.classList.remove('hidden');
+    setTimeout(() => message.classList.add('hidden'), 5000);
+  }
+
+  function loadRaceResults(raceId: number) {
+    currentRaceId = raceId;
+    const raceResults = results.filter(r => r.raceId === raceId).sort((a, b) => a.position - b.position);
+    
+    document.getElementById('raceResultsEditor')!.classList.remove('hidden');
+    renderRaceResultsDragDrop(raceResults);
+  }
+
+  function renderRaceResultsDragDrop(raceResults: any[]) {
+    const raceDriverIds = new Set(raceResults.map(r => r.driverId));
+    const availableDrivers = drivers.filter(d => !raceDriverIds.has(d.id));
+    
+    // Render available drivers
+    const availableDiv = document.getElementById('availableDrivers')!;
+    availableDiv.innerHTML = availableDrivers.map(driver => {
+      const team = teams.find(t => t.id === driver.teamId);
+      return `
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 border-zinc-700 cursor-move hover:border-red-600 transition-all" data-driver-id="${driver.id}">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-bold">#${driver.number} ${driver.name}</div>
+              <div class="text-xs text-zinc-400" style="color: ${team?.color}">${team?.name}</div>
+            </div>
+            <div class="text-2xl">🏎️</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Render race results
+    const resultsDiv = document.getElementById('raceResultsList')!;
+    resultsDiv.innerHTML = raceResults.map((result, index) => {
+      const driver = drivers.find(d => d.id === result.driverId);
+      const team = teams.find(t => t.id === driver?.teamId);
+      const points = calculatePoints(index + 1, result.dnf);
+      
+      return `
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 ${result.dnf ? 'border-red-700' : 'border-green-700'} cursor-move hover:border-green-500 transition-all" data-driver-id="${driver?.id}">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="text-2xl font-black ${result.dnf ? 'text-red-500' : 'text-yellow-500'}">${result.dnf ? 'DNF' : index + 1}</div>
+              <div>
+                <div class="font-bold">#${driver?.number} ${driver?.name}</div>
+                <div class="text-xs" style="color: ${team?.color}">${team?.name}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xl font-black ${result.dnf ? 'text-red-500' : 'text-green-500'}">${points}</div>
+              <div class="text-xs text-zinc-400">points</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Show/hide details section
+    const detailsSection = document.getElementById('raceDetails')!;
+    if (raceResults.length > 0) {
+      detailsSection.classList.remove('hidden');
+      renderRaceDetails(raceResults);
+    } else {
+      detailsSection.classList.add('hidden');
+    }
+    
+    // Initialize Sortable
+    if (raceSortable) {
+      raceSortable.destroy();
+    }
+    
+    raceSortable = new Sortable(resultsDiv, {
+      group: {
+        name: 'race',
+        pull: true,
+        put: true
+      },
+      animation: 150,
+      ghostClass: 'opacity-50',
+      onEnd: () => {
+        updateRaceResultsFromDrag();
+      }
+    });
+
+    // Make available drivers sortable too (move instead of clone)
+    new Sortable(availableDiv, {
+      group: {
+        name: 'race',
+        pull: true,
+        put: true
+      },
+      animation: 150,
+      sort: false,
+      onAdd: (evt) => {
+        // When a driver is dragged back, update the race results
+        updateRaceResultsFromDrag();
+      },
+      onRemove: (evt) => {
+        // When a driver is dragged out, update the race results
+        setTimeout(() => updateRaceResultsFromDrag(), 10);
+      }
+    });
+  }
+
+  function renderRaceDetails(raceResults) {
+    const detailsContent = document.getElementById('raceDetailsContent');
+    detailsContent.innerHTML = raceResults.map(result => {
+      const driver = drivers.find(d => d.id === result.driverId);
+      return `
+        <div class="grid grid-cols-3 gap-4 items-center bg-zinc-900 p-3 rounded">
+          <div class="font-bold">#${driver?.number} ${driver?.name}</div>
+          <div>
+            <label class="block text-xs text-zinc-400 mb-1">Fastest Lap</label>
+            <input type="text" class="w-full bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm font-mono" 
+                   value="${result.fastestLap || '0:00.000'}" data-driver-id="${result.driverId}" data-field="fastestLap" placeholder="1:23.456" />
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="w-4 h-4" data-driver-id="${result.driverId}" data-field="dnf" ${result.dnf ? 'checked' : ''} />
+            <label class="text-sm text-red-500">DNF</label>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateRaceResultsFromDrag() {
+    const resultsDiv = document.getElementById('raceResultsList')!;
+    const driverCards = Array.from(resultsDiv.querySelectorAll('.driver-card'));
+    
+    // Remove old results for this race
+    results = results.filter(r => r.raceId !== currentRaceId);
+    
+    // Add new results based on drag order
+    driverCards.forEach((card, index) => {
+      const driverId = parseInt(card.getAttribute('data-driver-id')!);
+      const position = index + 1;
+      const points = calculatePoints(position);
+      
+      // Get existing data or defaults
+      const existingResult = results.find(r => r.raceId === currentRaceId && r.driverId === driverId);
+      
+      results.push({
+        raceId: currentRaceId!,
+        driverId,
+        position,
+        points,
+        fastestLap: existingResult?.fastestLap || false,
+        dnf: existingResult?.dnf || false
+      });
+    });
+    
+    // Re-render
+    loadRaceResults(currentRaceId!);
+  }
+
+
+  // Tab switching
+  document.getElementById('tabRaceResults')?.addEventListener('click', function() {
+    document.getElementById('raceResultsTab')!.classList.remove('hidden');
+    document.getElementById('qualifyingTab')!.classList.add('hidden');
+    this.classList.remove('bg-zinc-700', 'hover:bg-zinc-600');
+    this.classList.add('bg-red-600');
+    document.getElementById('tabQualifying')!.classList.remove('bg-red-600');
+    document.getElementById('tabQualifying')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+  });
+
+  document.getElementById('tabQualifying')?.addEventListener('click', function() {
+    document.getElementById('raceResultsTab')!.classList.add('hidden');
+    document.getElementById('qualifyingTab')!.classList.remove('hidden');
+    this.classList.remove('bg-zinc-700', 'hover:bg-zinc-600');
+    this.classList.add('bg-red-600');
+    document.getElementById('tabRaceResults')!.classList.remove('bg-red-600');
+    document.getElementById('tabRaceResults')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+  });
+
+  // Race selection
+  document.getElementById('raceSelect')?.addEventListener('change', function(e) {
+    const raceId = parseInt((e.target as HTMLSelectElement).value);
+    if (raceId) {
+      loadRaceResults(raceId);
+    } else {
+      document.getElementById('raceResultsEditor')!.classList.add('hidden');
+    }
+  });
+
+
+  // Parse lap time string (mm:ss.milliseconds) to milliseconds
+  function parseTime(timeStr: string): number {
+    if (!timeStr || timeStr === 'false' || timeStr === '0:00.000') return Infinity;
+    const [minutes, secondsMs] = timeStr.split(':');
+    const [seconds, milliseconds] = secondsMs.split('.');
+    return parseInt(minutes) * 60000 + parseInt(seconds) * 1000 + parseInt(milliseconds);
+  }
+
+  // Save race results
+  document.getElementById('saveRaceResults')?.addEventListener('click', async function() {
+    if (!currentRaceId) return;
+
+    const detailsContent = document.getElementById('raceDetailsContent')!;
+    const inputs = detailsContent.querySelectorAll('input');
+    
+    // Update fastest laps and DNF status from details section
+    inputs.forEach(input => {
+      const driverId = parseInt(input.getAttribute('data-driver-id')!);
+      const field = input.getAttribute('data-field');
+      const resultIndex = results.findIndex(r => r.raceId === currentRaceId && r.driverId === driverId);
+      
+      if (resultIndex >= 0) {
+        if (field === 'fastestLap') {
+          results[resultIndex].fastestLap = input.value;
+        } else if (field === 'dnf') {
+          const isDnf = (input as HTMLInputElement).checked;
+          results[resultIndex].dnf = isDnf;
+          // If DNF, set points to 0
+          if (isDnf) {
+            results[resultIndex].points = 0;
+          } else {
+            // Recalculate points based on position
+            results[resultIndex].points = calculatePoints(results[resultIndex].position, false);
+          }
+        }
+      }
+    });
+    
+    // Find the fastest lap in this race and award bonus point
+    const raceResults = results.filter(r => r.raceId === currentRaceId);
+    let fastestResult = null;
+    let fastestTime = Infinity;
+    
+    raceResults.forEach(result => {
+      if (result.fastestLap && result.fastestLap !== 'false' && result.fastestLap !== '0:00.000') {
+        const lapTime = parseTime(result.fastestLap);
+        if (lapTime < fastestTime) {
+          fastestTime = lapTime;
+          fastestResult = result;
+        }
+      }
+    });
+    
+    // Award +1 point for fastest lap (only if they finished and not DNF)
+    if (fastestResult && !fastestResult.dnf) {
+      fastestResult.points += 1;
+    }
+    
+    // Update race status to completed
+    const raceIndex = races.findIndex(r => r.id === currentRaceId);
+    if (raceIndex >= 0) {
+      races[raceIndex].status = 'completed';
+    }
+    
+    // Persist to backend
+    try {
+      const [resultsResponse, racesResponse] = await Promise.all([
+        fetch('/api/results.json', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(results)
+        }),
+        fetch('/api/races.json', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(races)
+        })
+      ]);
+      
+      if (resultsResponse.ok && racesResponse.ok) {
+        showMessage('Results saved successfully and race marked as completed!', 'race');
+        // Reload race select to update status badges
+        const raceSelect = document.getElementById('raceSelect') as HTMLSelectElement;
+        const raceOptions = '<option value="">Select a race</option>' + 
+          races.map(race => {
+            const statusBadge = race.status === 'completed' ? '✓' : '○';
+            return `<option value="${race.id}">${statusBadge} Round ${race.round}: ${race.name}</option>`;
+          }).join('');
+        raceSelect.innerHTML = raceOptions;
+        raceSelect.value = currentRaceId.toString();
+      } else {
+        showMessage('Results saved but failed to update race status', 'race');
+      }
+    } catch (error) {
+      showMessage('Results saved locally but failed to persist: ' + error, 'race');
+    }
+    
+    loadRaceResults(currentRaceId);
+  });
+
+  // Qualifying handlers
+  function loadQualifying(raceId: number) {
+    currentQualyRaceId = raceId;
+    const qualyResults = qualifying.filter(q => q.raceId === raceId).sort((a, b) => a.position - b.position);
+    
+    document.getElementById('qualifyingEditor')!.classList.remove('hidden');
+    renderQualifyingDragDrop(qualyResults);
+  }
+
+  function renderQualifyingDragDrop(qualyResults: any[]) {
+    const qualyDriverIds = new Set(qualyResults.map(q => q.driverId));
+    const availableDrivers = drivers.filter(d => !qualyDriverIds.has(d.id));
+    
+    // Render available drivers
+    const availableDiv = document.getElementById('qualyAvailableDrivers')!;
+    availableDiv.innerHTML = availableDrivers.map(driver => {
+      const team = teams.find(t => t.id === driver.teamId);
+      return `
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 border-zinc-700 cursor-move hover:border-red-600 transition-all" data-driver-id="${driver.id}">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-bold">#${driver.number} ${driver.name}</div>
+              <div class="text-xs text-zinc-400" style="color: ${team?.color}">${team?.name}</div>
+            </div>
+            <div class="text-2xl">🏎️</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Render qualifying list
+    const qualyDiv = document.getElementById('qualifyingList')!;
+    qualyDiv.innerHTML = qualyResults.map((result, index) => {
+      const driver = drivers.find(d => d.id === result.driverId);
+      const team = teams.find(t => t.id === driver?.teamId);
+      
+      return `
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 ${result.dnf ? 'border-red-700' : 'border-yellow-700'} cursor-move hover:border-yellow-500 transition-all" data-driver-id="${driver?.id}">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="text-2xl font-black ${result.dnf ? 'text-red-500' : index === 0 ? 'text-yellow-500' : 'text-zinc-500'}">${result.dnf ? 'DNF' : index === 0 ? 'P' : index + 1}</div>
+              <div>
+                <div class="font-bold">#${driver?.number} ${driver?.name}</div>
+                <div class="text-xs" style="color: ${team?.color}">${team?.name}</div>
+              </div>
+            </div>
+            <div class="text-right text-xs font-mono text-zinc-400">
+              ${result.lapTime || '—'}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Show/hide details section
+    const detailsSection = document.getElementById('qualyDetails')!;
+    if (qualyResults.length > 0) {
+      detailsSection.classList.remove('hidden');
+      renderQualyDetails(qualyResults);
+    } else {
+      detailsSection.classList.add('hidden');
+    }
+    
+    // Initialize Sortable
+    if (qualySortable) {
+      qualySortable.destroy();
+    }
+    
+    qualySortable = new Sortable(qualyDiv, {
+      group: {
+        name: 'qualy',
+        pull: true,
+        put: true
+      },
+      animation: 150,
+      ghostClass: 'opacity-50',
+      onEnd: () => {
+        updateQualifyingFromDrag();
+      }
+    });
+
+    // Make available drivers sortable too (move instead of clone)
+    new Sortable(availableDiv, {
+      group: {
+        name: 'qualy',
+        pull: true,
+        put: true
+      },
+      animation: 150,
+      sort: false,
+      onAdd: (evt) => {
+        // When a driver is dragged back, update qualifying
+        updateQualifyingFromDrag();
+      },
+      onRemove: (evt) => {
+        // When a driver is dragged out, update qualifying
+        setTimeout(() => updateQualifyingFromDrag(), 10);
+      }
+    });
+  }
+
+  function renderQualyDetails(qualyResults) {
+    const detailsContent = document.getElementById('qualyDetailsContent');
+    detailsContent.innerHTML = qualyResults.map(result => {
+      const driver = drivers.find(d => d.id === result.driverId);
+      return `
+        <div class="grid grid-cols-3 gap-4 items-center bg-zinc-900 p-3 rounded">
+          <div class="font-bold">#${driver?.number} ${driver?.name}</div>
+          <div>
+            <label class="block text-xs text-zinc-400 mb-1">Lap Time</label>
+            <input type="text" class="w-full bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm font-mono" 
+                   value="${result.lapTime || '0:00.000'}" data-driver-id="${result.driverId}" data-field="lapTime" placeholder="1:23.456" />
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="w-4 h-4" data-driver-id="${result.driverId}" data-field="dnf" ${result.dnf ? 'checked' : ''} />
+            <label class="text-sm text-red-500">DNF</label>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateQualifyingFromDrag() {
+    const qualyDiv = document.getElementById('qualifyingList');
+    const driverCards = Array.from(qualyDiv.querySelectorAll('.driver-card'));
+    
+    // Remove old qualifying for this race
+    qualifying = qualifying.filter(q => q.raceId !== currentQualyRaceId);
+    
+    // Add new qualifying based on drag order
+    driverCards.forEach((card, index) => {
+      const driverId = parseInt(card.getAttribute('data-driver-id'));
+      const position = index + 1;
+      
+      // Get existing data or defaults
+      const existingQualy = qualifying.find(q => q.raceId === currentQualyRaceId && q.driverId === driverId);
+      
+      qualifying.push({
+        raceId: currentQualyRaceId,
+        driverId,
+        position,
+        lapTime: existingQualy?.lapTime || '0:00.000',
+        dnf: existingQualy?.dnf || false
+      });
+    });
+    
+    // Re-render
+    loadQualifying(currentQualyRaceId);
+  }
+
+  document.getElementById('qualyRaceSelect')?.addEventListener('change', function(e) {
+    const raceId = parseInt((e.target as HTMLSelectElement).value);
+    if (raceId) {
+      loadQualifying(raceId);
+    } else {
+      document.getElementById('qualifyingEditor')!.classList.add('hidden');
+    }
+  });
+
+
+  document.getElementById('saveQualifying')?.addEventListener('click', async function() {
+    if (!currentQualyRaceId) return;
+
+    const detailsContent = document.getElementById('qualyDetailsContent')!;
+    const inputs = detailsContent.querySelectorAll('input');
+    
+    // Update lap times from details section
+    inputs.forEach(input => {
+      const driverId = parseInt(input.getAttribute('data-driver-id'));
+      const field = input.getAttribute('data-field');
+      const qualyIndex = qualifying.findIndex(q => q.raceId === currentQualyRaceId && q.driverId === driverId);
+      
+      if (qualyIndex >= 0) {
+        if (field === 'lapTime') {
+          qualifying[qualyIndex].lapTime = input.value;
+        } else if (field === 'dnf') {
+          qualifying[qualyIndex].dnf = (input as HTMLInputElement).checked;
+        }
+      }
+    });
+    
+    // Persist to backend
+    try {
+      const response = await fetch('/api/qualifying.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(qualifying)
+      });
+      
+      if (response.ok) {
+        showMessage('Qualifying saved successfully and persisted to file!', 'qualy');
+      } else {
+        showMessage('Qualifying saved locally but failed to persist to file', 'qualy');
+      }
+    } catch (error) {
+      showMessage('Qualifying saved locally but failed to persist: ' + error, 'qualy');
+    }
+    
+    loadQualifying(currentQualyRaceId);
+  });
+
+  loadData();
+</script>

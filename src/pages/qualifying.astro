@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro';
+import races from '../../public/data/races.json';
+import circuits from '../../public/data/circuits.json';
+import drivers from '../../public/data/drivers.json';
+import teams from '../../public/data/teams.json';
+import qualifying from '../../public/data/qualifying.json';
+
+// Get all completed races with qualifying data
+const completedRaces = races.filter((r: any) => r.status === 'completed');
+
+// Group qualifying by race and add race/circuit/driver info
+const qualifyingByRace = completedRaces.map((race: any) => {
+  const circuit = circuits.find((c: any) => c.id === race.circuitId);
+  const raceQualifying = qualifying
+    .filter((q: any) => q.raceId === race.id)
+    .map((q: any) => {
+      const driver = drivers.find((d: any) => d.id === q.driverId);
+      const team = teams.find((t: any) => t.id === driver?.teamId);
+      return { ...q, driver, team };
+    })
+    .sort((a: any, b: any) => {
+      // DNF drivers go to the back
+      if (a.dnf && !b.dnf) return 1;
+      if (!a.dnf && b.dnf) return -1;
+      return a.position - b.position;
+    });
+  
+  return { race, circuit, qualifying: raceQualifying };
+});
+
+// Calculate all-time pole positions
+const polePositions = drivers.map((driver: any) => {
+  const poles = qualifying.filter((q: any) => q.driverId === driver.id && q.position === 1 && !q.dnf).length;
+  const team = teams.find((t: any) => t.id === driver.teamId);
+  
+  return { ...driver, team, poles };
+}).sort((a: any, b: any) => b.poles - a.poles);
+---
+
+<Layout title="Qualifying - Apex Karting">
+  <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
+    QUALIFYING RESULTS
+  </h1>
+
+  <!-- Pole Positions Summary -->
+  <div class="mb-12">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Pole Positions</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {polePositions.filter((d: any) => d.poles > 0).map((driver: any, index: number) => (
+        <div class="bg-zinc-900 rounded-lg p-6 border-2 border-zinc-800">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <a href={`/drivers/${driver.id}`} class="font-bold text-lg hover:text-red-500 transition-colors">
+                {driver.name}
+              </a>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="w-2 h-2 rounded" style={`background-color: ${driver.team?.color}`}></span>
+                <span class="text-xs text-zinc-400">{driver.team?.name}</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-3xl font-black text-yellow-500">{driver.poles}</div>
+              <div class="text-xs text-zinc-400 uppercase">Poles</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Qualifying by Race -->
+  {qualifyingByRace.map((raceData: any) => (
+    <div class="mb-12">
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 gap-2">
+        <h2 class="text-xl md:text-3xl font-bold border-l-4 border-red-600 pl-4">
+          {raceData.race.name}
+        </h2>
+        <div class="text-left md:text-right">
+          <div class="text-zinc-400 text-sm">{raceData.circuit.name}</div>
+          <div class="text-zinc-500 text-xs">{raceData.race.date}</div>
+        </div>
+      </div>
+
+      <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
+        <table class="w-full min-w-[500px]">
+          <thead class="bg-red-600">
+            <tr>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Driver</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Lap Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {raceData.qualifying.map((result: any) => (
+              <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+                <td class="px-6 py-4">
+                  {result.dnf ? (
+                    <span class="font-bold text-2xl text-red-500">DNF</span>
+                  ) : result.position === 1 ? (
+                    <span class="font-bold text-2xl text-yellow-500">P1</span>
+                  ) : (
+                    <span class="font-bold text-xl">{result.position}</span>
+                  )}
+                </td>
+                <td class="px-6 py-4">
+                  <a href={`/drivers/${result.driver.id}`} class="font-bold hover:text-red-500 transition-colors">
+                    {result.driver.name}
+                  </a>
+                  <div class="text-sm text-zinc-400">#{result.driver.number}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style={`background-color: ${result.team.color}`}></span>
+                    <span class="text-sm">{result.team.name}</span>
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span class={`font-mono font-bold ${result.dnf ? 'text-red-500' : result.position === 1 ? 'text-yellow-500 text-lg' : 'text-white'}`}>
+                    {result.dnf ? '—' : result.lapTime}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  ))}
+
+  {qualifyingByRace.length === 0 && (
+    <div class="bg-zinc-900 rounded-lg p-12 text-center border-2 border-zinc-800">
+      <div class="text-6xl mb-4">⏱️</div>
+      <h2 class="text-2xl font-bold mb-2">No Qualifying Data Yet</h2>
+      <p class="text-zinc-400">Qualifying results will appear here after races are completed.</p>
+    </div>
+  )}
+</Layout>

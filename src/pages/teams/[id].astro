@@ -1,0 +1,83 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import drivers from '../../../public/data/drivers.json';
+import teamsData from '../../../public/data/teams.json';
+import results from '../../../public/data/results.json';
+
+export async function getStaticPaths() {
+  return teamsData.map((team: any) => ({
+    params: { id: team.id.toString() },
+  }));
+}
+
+const { id } = Astro.params;
+const teams = teamsData;
+
+const team = teams.find((t: any) => t.id === parseInt(id));
+const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
+
+const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
+  const driverResults = results.filter((r: any) => r.driverId === driver.id);
+  return sum + driverResults.reduce((s: number, r: any) => s + r.points, 0);
+}, 0);
+
+const driversWithStats = teamDrivers.map((driver: any) => {
+  const driverResults = results.filter((r: any) => r.driverId === driver.id);
+  const points = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
+  const wins = driverResults.filter((r: any) => r.position === 1).length;
+  const podiums = driverResults.filter((r: any) => r.position <= 3).length;
+  const poles = driverResults.filter((r: any) => r.pole).length;
+  
+  return { ...driver, points, wins, podiums, poles };
+});
+---
+
+<Layout title={`${team.name} - Apex Karting`}>
+  <a href="/teams" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
+    ← Back to Teams
+  </a>
+
+  <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
+    <div class="flex items-center gap-8 mb-6">
+      <div class="w-32 h-32 rounded-full flex items-center justify-center" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`}>
+        <span class="text-5xl font-black" style={`color: ${team.color}`}>
+          {team.name.charAt(0)}
+        </span>
+      </div>
+      <div>
+        <h1 class="text-5xl font-black mb-4">{team.name}</h1>
+        <div class="text-3xl font-bold text-red-500">{teamPoints} Points</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Team Drivers</h2>
+  <div class="grid md:grid-cols-2 gap-6 mb-8">
+    {driversWithStats.map((driver: any) => (
+      <a href={`/drivers/${driver.id}`} class="bg-zinc-900 rounded-lg p-6 border-2 border-zinc-800 hover:border-red-600 transition-all group">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">{driver.name}</h3>
+          <span class="text-4xl font-black text-zinc-700">#{driver.number}</span>
+        </div>
+        <div class="grid grid-cols-4 gap-4 text-center">
+          <div>
+            <div class="text-zinc-400 text-sm">Points</div>
+            <div class="font-bold text-xl">{driver.points}</div>
+          </div>
+          <div>
+            <div class="text-zinc-400 text-sm">Wins</div>
+            <div class="font-bold text-xl">{driver.wins}</div>
+          </div>
+          <div>
+            <div class="text-zinc-400 text-sm">Podiums</div>
+            <div class="font-bold text-xl">{driver.podiums}</div>
+          </div>
+          <div>
+            <div class="text-zinc-400 text-sm">Poles</div>
+            <div class="font-bold text-xl">{driver.poles}</div>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</Layout>
