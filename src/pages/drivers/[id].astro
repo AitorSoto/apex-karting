@@ -31,7 +31,16 @@ const raceHistory = driverResults.map((result: any) => {
   const circuit = circuits.find((c: any) => c.id === race?.circuitId);
   const qualyResult = driverQualifying.find((q: any) => q.raceId === result.raceId);
   const hadPole = qualyResult?.position === 1 && !qualyResult?.dnf;
-  return { ...result, race, circuit, hadPole };
+  
+  // Find fastest lap in this race
+  const raceResults = results.filter((r: any) => r.raceId === result.raceId && !r.dnf);
+  const fastestInRace = raceResults.reduce((fastest: any, r: any) => {
+    if (!fastest || r.fastestLap < fastest.fastestLap) return r;
+    return fastest;
+  }, null);
+  const hadFastestLap = fastestInRace && fastestInRace.driverId === result.driverId && !result.dnf;
+  
+  return { ...result, race, circuit, hadPole, hadFastestLap };
 }).sort((a: any, b: any) => a.race.round - b.race.round);
 ---
 
@@ -92,7 +101,9 @@ const raceHistory = driverResults.map((result: any) => {
       </thead>
       <tbody>
         {raceHistory.map((result: any) => (
-          <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+          <tr class={`border-b border-zinc-800 hover:bg-zinc-800 transition-colors ${
+            result.hadFastestLap ? 'bg-purple-900/30 border-purple-700' : ''
+          }`}>
             <td class="px-6 py-4 font-bold">{result.race.round}</td>
             <td class="px-6 py-4">
               <div class="font-bold">{result.race.name}</div>
