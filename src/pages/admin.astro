@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
 ---
 
 <Layout title="Admin - Apex Karting">
@@ -128,6 +130,13 @@ import Layout from '../layouts/Layout.astro';
   </div>
 
 </Layout>
+
+<script is:inline>
+  // Check authentication - redirect to login if not authenticated
+  if (sessionStorage.getItem('admin-auth') !== 'true') {
+    window.location.href = '/admin-login';
+  }
+</script>
 
 <script is:inline src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 
