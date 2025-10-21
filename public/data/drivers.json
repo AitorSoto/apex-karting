@@ -41,10 +41,18 @@
   },
   {
     "id": 6,
-    "name": "Lucas Lupori",
-    "number": 63,
+    "name": "Ethan Schultz",
+    "number": 33,
     "teamId": 3,
-    "nationality": "ARG",
+    "nationality": "USA",
+    "image": "/images/drivers/russell.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Berni Ollero",
+    "number": 5,
+    "teamId": 4,
+    "nationality": "ESP",
     "image": "/images/drivers/russell.jpg"
   }
 ]

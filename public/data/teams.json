@@ -16,5 +16,11 @@
     "name": "Toto Smash Racing",
     "color": "#00D2BE",
     "logo": "/images/teams/mercedes.png"
+  },
+  {
+    "id": 4,
+    "name": "Aston Lentin",
+    "color": "#00594F",
+    "logo": "/images/teams/mercedes.png"
   }
 ]
