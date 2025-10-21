@@ -2,56 +2,56 @@
   {
     "id": 1,
     "name": "Elche Karting Circuit",
-    "location": "Elche, Spain",
+    "location": "Elche, España",
     "length": 1.2,
     "turns": 11
   },
   {
     "id": 2,
     "name": "Villafranqueza Karting",
-    "location": "Alicante, Spain",
+    "location": "Alicante, España",
     "length": 1.5,
     "turns": 14
   },
   {
     "id": 3,
     "name": "San Vicente Karting",
-    "location": "Alicante, Spain",
+    "location": "Alicante, España",
     "length": 1.3,
     "turns": 12
   },
   {
     "id": 4,
     "name": "Karting Iglesias Grand Prix",
-    "location": "Torrevieja, Spain",
+    "location": "Torrevieja, España",
     "length": 1.3,
     "turns": 12
   },
   {
     "id": 5,
     "name": "OrioKart Grand Prix",
-    "location": "Orihuela, Spain",
+    "location": "Orihuela, España",
     "length": 1.3,
     "turns": 12
   },
   {
     "id": 6,
     "name": "Finestrat Grand Prix",
-    "location": "Finestrat, Spain",
+    "location": "Finestrat, España",
     "length": 1.3,
     "turns": 12
   },
   {
     "id": 7,
     "name": "La Vila Grand Prix",
-    "location": "Villajoyosa, Spain",
+    "location": "Villajoyosa, España",
     "length": 1.3,
     "turns": 12
   },
     {
     "id": 8,
     "name": "Villena Grand Prix",
-    "location": "Villena, Spain",
+    "location": "Villena, España",
     "length": 1.3,
     "turns": 12
   }  

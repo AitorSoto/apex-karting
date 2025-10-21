@@ -43,7 +43,7 @@ const resultsWithDrivers = raceResults.map((result: any) => {
 
 <Layout title={`${race.name} - Apex Karting`}>
   <a href="/races" class="inline-block mb-4 md:mb-6 text-red-500 hover:text-red-400 transition-colors text-sm md:text-base">
-    ← Back to Races
+    ← Volver a Carreras
   </a>
 
   <div class="bg-zinc-900 rounded-lg p-4 md:p-8 mb-6 md:mb-8 border-l-4 border-red-600">
@@ -56,24 +56,24 @@ const resultsWithDrivers = raceResults.map((result: any) => {
         <div class="flex-1 min-w-0">
           <h1 class="text-2xl font-black mb-2 leading-tight">{race.name}</h1>
           <span class={`inline-block px-2 py-1 rounded text-xs font-bold uppercase ${race.status === 'completed' ? 'bg-green-600' : 'bg-red-600'}`}>
-            {race.status}
+            {race.status === 'completed' ? 'Completada' : 'Próxima'}
           </span>
         </div>
       </div>
       <div class="space-y-3">
         <div>
-          <div class="text-zinc-400 text-xs uppercase mb-1">Circuit</div>
+          <div class="text-zinc-400 text-xs uppercase mb-1">Circuito</div>
           <div class="font-bold text-base">{circuit.name}</div>
           <div class="text-zinc-400 text-sm">{circuit.location}</div>
         </div>
         <div class="flex gap-6">
           <div>
-            <div class="text-zinc-400 text-xs uppercase mb-1">Date</div>
+            <div class="text-zinc-400 text-xs uppercase mb-1">Fecha</div>
             <div class="font-bold text-sm">{race.date}</div>
           </div>
           <div>
-            <div class="text-zinc-400 text-xs uppercase mb-1">Track</div>
-            <div class="font-bold text-sm">{circuit.length}km • {circuit.turns} turns</div>
+            <div class="text-zinc-400 text-xs uppercase mb-1">Pista</div>
+            <div class="font-bold text-sm">{circuit.length}km • {circuit.turns} curvas</div>
           </div>
         </div>
       </div>
@@ -88,23 +88,23 @@ const resultsWithDrivers = raceResults.map((result: any) => {
         <div>
           <h1 class="text-4xl font-black">{race.name}</h1>
           <span class={`inline-block mt-2 px-3 py-1 rounded text-xs font-bold uppercase ${race.status === 'completed' ? 'bg-green-600' : 'bg-red-600'}`}>
-            {race.status}
+            {race.status === 'completed' ? 'Completada' : 'Próxima'}
           </span>
         </div>
       </div>
       <div class="grid md:grid-cols-3 gap-6 mt-6">
         <div>
-          <div class="text-zinc-400 text-sm">Circuit</div>
+          <div class="text-zinc-400 text-sm">Circuito</div>
           <div class="font-bold text-xl">{circuit.name}</div>
           <div class="text-zinc-400 text-sm">{circuit.location}</div>
         </div>
         <div>
-          <div class="text-zinc-400 text-sm">Date</div>
+          <div class="text-zinc-400 text-sm">Fecha</div>
           <div class="font-bold text-xl">{race.date}</div>
         </div>
         <div>
-          <div class="text-zinc-400 text-sm">Circuit Info</div>
-          <div class="font-bold">{circuit.length}km • {circuit.turns} turns</div>
+          <div class="text-zinc-400 text-sm">Info del Circuito</div>
+          <div class="font-bold">{circuit.length}km • {circuit.turns} curvas</div>
         </div>
       </div>
     </div>
@@ -112,15 +112,15 @@ const resultsWithDrivers = raceResults.map((result: any) => {
 
   {race.status === 'completed' && resultsWithDrivers.length > 0 && (
     <>
-      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Race Results</h2>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Resultados de la Carrera</h2>
       <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
         <table class="w-full min-w-[500px]">
           <thead class="bg-red-600">
             <tr>
               <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
-              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Driver</th>
-              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
-              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Piloto</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Equipo</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Puntos</th>
             </tr>
           </thead>
           <tbody>
@@ -158,8 +158,8 @@ const resultsWithDrivers = raceResults.map((result: any) => {
   {race.status === 'upcoming' && (
     <div class="bg-zinc-900 rounded-lg p-12 text-center border-2 border-zinc-800">
       <div class="text-6xl mb-4">🏁</div>
-      <h2 class="text-2xl font-bold mb-2">Race Coming Soon</h2>
-      <p class="text-zinc-400">Results will be available after the race is completed.</p>
+      <h2 class="text-2xl font-bold mb-2">Carrera Próximamente</h2>
+      <p class="text-zinc-400">Los resultados estarán disponibles después de completar la carrera.</p>
     </div>
   )}
 </Layout>

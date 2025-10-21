@@ -34,7 +34,7 @@ const driversWithStats = teamDrivers.map((driver: any) => {
 
 <Layout title={`${team.name} - Apex Karting`}>
   <a href="/teams" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
-    ← Back to Teams
+    ← Volver a Equipos
   </a>
 
   <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
@@ -46,12 +46,12 @@ const driversWithStats = teamDrivers.map((driver: any) => {
       </div>
       <div>
         <h1 class="text-5xl font-black mb-4">{team.name}</h1>
-        <div class="text-3xl font-bold text-red-500">{teamPoints} Points</div>
+        <div class="text-3xl font-bold text-red-500">{teamPoints} Puntos</div>
       </div>
     </div>
   </div>
 
-  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Team Drivers</h2>
+  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Pilotos del Equipo</h2>
   <div class="grid md:grid-cols-2 gap-6 mb-8">
     {driversWithStats.map((driver: any) => (
       <a href={`/drivers/${driver.id}`} class="bg-zinc-900 rounded-lg p-6 border-2 border-zinc-800 hover:border-red-600 transition-all group">
@@ -61,15 +61,15 @@ const driversWithStats = teamDrivers.map((driver: any) => {
         </div>
         <div class="grid grid-cols-4 gap-4 text-center">
           <div>
-            <div class="text-zinc-400 text-sm">Points</div>
+            <div class="text-zinc-400 text-sm">Puntos</div>
             <div class="font-bold text-xl">{driver.points}</div>
           </div>
           <div>
-            <div class="text-zinc-400 text-sm">Wins</div>
+            <div class="text-zinc-400 text-sm">Victorias</div>
             <div class="font-bold text-xl">{driver.wins}</div>
           </div>
           <div>
-            <div class="text-zinc-400 text-sm">Podiums</div>
+            <div class="text-zinc-400 text-sm">Podios</div>
             <div class="font-bold text-xl">{driver.podiums}</div>
           </div>
           <div>

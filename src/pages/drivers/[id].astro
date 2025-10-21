@@ -46,7 +46,7 @@ const raceHistory = driverResults.map((result: any) => {
 
 <Layout title={`${driver.name} - Apex Karting`}>
   <a href="/drivers" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
-    ← Back to Drivers
+    ← Volver a Pilotos
   </a>
 
   <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
@@ -59,7 +59,7 @@ const raceHistory = driverResults.map((result: any) => {
           <span class="text-xl" style={`color: ${team.color}`}>{team.name}</span>
         </div>
         <div class="text-zinc-400 text-lg">
-          <span class="font-bold">Nationality:</span> {driver.nationality}
+          <span class="font-bold">Nacionalidad:</span> {driver.nationality}
         </div>
       </div>
     </div>
@@ -69,15 +69,15 @@ const raceHistory = driverResults.map((result: any) => {
   <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
       <div class="text-4xl font-black text-red-500 mb-2">{totalPoints}</div>
-      <div class="text-zinc-400 uppercase text-sm font-bold">Total Points</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Puntos Totales</div>
     </div>
     <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
       <div class="text-4xl font-black text-red-500 mb-2">{wins}</div>
-      <div class="text-zinc-400 uppercase text-sm font-bold">Wins</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Victorias</div>
     </div>
     <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
       <div class="text-4xl font-black text-red-500 mb-2">{podiums}</div>
-      <div class="text-zinc-400 uppercase text-sm font-bold">Podiums</div>
+      <div class="text-zinc-400 uppercase text-sm font-bold">Podios</div>
     </div>
     <div class="bg-zinc-900 rounded-lg p-6 text-center border-2 border-zinc-800">
       <div class="text-4xl font-black text-red-500 mb-2">{poles}</div>
@@ -86,16 +86,16 @@ const raceHistory = driverResults.map((result: any) => {
   </div>
 
   <!-- Race History -->
-  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Race History</h2>
+  <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Historial de Carreras</h2>
   <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
     <table class="w-full">
       <thead class="bg-red-600">
         <tr>
-          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Round</th>
-          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Race</th>
-          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Position</th>
-          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
-          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Fastest Lap</th>
+          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Ronda</th>
+          <th class="px-6 py-4 text-left font-bold uppercase text-sm">Carrera</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Posición</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Puntos</th>
+          <th class="px-6 py-4 text-center font-bold uppercase text-sm">Vuelta Más Rápida</th>
           <th class="px-6 py-4 text-center font-bold uppercase text-sm">Pole</th>
         </tr>
       </thead>

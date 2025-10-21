@@ -37,25 +37,25 @@ const teamStandings = teams.map((team: any) => {
 }).sort((a: any, b: any) => b.points - a.points);
 ---
 
-<Layout title="Standings - Apex Karting">
+<Layout title="Clasificación - Apex Karting">
   <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
-    CHAMPIONSHIP STANDINGS
+    CLASIFICACIÓN DEL CAMPEONATO
   </h1>
 
   <div class="space-y-12">
     <!-- Driver Standings -->
     <div>
-      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Driver Standings</h2>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Clasificación de Pilotos</h2>
       <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
         <table class="w-full min-w-[600px]">
           <thead class="bg-red-600">
             <tr>
               <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
-              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Driver</th>
-              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
-              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
-              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Wins</th>
-              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Podiums</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Piloto</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Equipo</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Puntos</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Victorias</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Podios</th>
               <th class="px-6 py-4 text-center font-bold uppercase text-sm">Poles</th>
             </tr>
           </thead>
@@ -90,14 +90,14 @@ const teamStandings = teams.map((team: any) => {
 
     <!-- Team Standings -->
     <div>
-      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Team Standings</h2>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Clasificación de Equipos</h2>
       <div class="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 table-container">
         <table class="w-full min-w-[400px]">
           <thead class="bg-red-600">
             <tr>
               <th class="px-6 py-4 text-left font-bold uppercase text-sm">Pos</th>
-              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Team</th>
-              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Points</th>
+              <th class="px-6 py-4 text-left font-bold uppercase text-sm">Equipo</th>
+              <th class="px-6 py-4 text-center font-bold uppercase text-sm">Puntos</th>
             </tr>
           </thead>
           <tbody>
