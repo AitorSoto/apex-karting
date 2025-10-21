@@ -22,5 +22,11 @@
     "name": "Aston Lentin",
     "color": "#00594F",
     "logo": "/images/teams/mercedes.png"
+  },
+  {
+    "id": 5,
+    "name": "McLaren’t",
+    "color": "#FF8000",
+    "logo": "/images/teams/mercedes.png"
   }
 ]

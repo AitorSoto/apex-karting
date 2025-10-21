@@ -62,5 +62,13 @@
     "teamId": 4,
     "nationality": "BEL",
     "image": "/images/drivers/russell.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Diego Paterno",
+    "number": 67,
+    "teamId": 5,
+    "nationality": "BEL",
+    "image": "/images/drivers/russell.jpg"
   }
 ]
