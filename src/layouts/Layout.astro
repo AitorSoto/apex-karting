@@ -31,8 +31,10 @@ const { title } = Astro.props;
           
           <!-- Mobile menu button -->
           <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </button>
           
@@ -49,7 +51,7 @@ const { title } = Astro.props;
         </div>
         
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2 flex flex-col gap-3">
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2 flex flex-col gap-3 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0">
           <a href="/" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Inicio</a>
           <a href="/standings" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Clasificación general</a>
           <a href="/qualifying" class="text-white hover:text-red-300 font-bold transition-colors uppercase text-sm">Qualys</a>
@@ -70,13 +72,7 @@ const { title } = Astro.props;
     </footer>
     
     <script>
-      // Mobile menu toggle
-      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-      
-      mobileMenuBtn?.addEventListener('click', () => {
-        mobileMenu?.classList.toggle('hidden');
-      });
+      import '../components/Menu.ts';
     </script>
   </body>
 </html>
