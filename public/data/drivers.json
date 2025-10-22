@@ -70,5 +70,30 @@
     "teamId": 5,
     "nationality": "BEL",
     "image": "/images/drivers/russell.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Guille Candeia",
+    "number": 7,
+    "teamId": 5,
+    "nationality": "POR",
+    "image": "/images/drivers/russell.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Lenny Machuca",
+    "number": 14,
+    "teamId": 6,
+    "nationality": "ESP",
+    "image": "/images/drivers/russell.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Mael Machuca",
+    "number": 9,
+    "teamId": 6,
+    "nationality": "ESP",
+    "image": "/images/drivers/russell.jpg"
   }
+
 ]

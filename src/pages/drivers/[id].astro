@@ -17,7 +17,10 @@ const { id } = Astro.params;
 const drivers = driversData;
 
 const driver = drivers.find((d: any) => d.id === parseInt(id));
+if (!driver) throw new Error(`Driver with id ${id} not found`);
+
 const team = teams.find((t: any) => t.id === driver.teamId);
+if (!team) throw new Error(`Team with id ${driver.teamId} not found`);
 const driverResults = results.filter((r: any) => r.driverId === driver.id);
 const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
 

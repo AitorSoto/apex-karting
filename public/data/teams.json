@@ -28,5 +28,11 @@
     "name": "McLaren’t",
     "color": "#FF8000",
     "logo": "/images/teams/mercedes.png"
+  },
+  {
+    "id": 6,
+    "name": "AlPain",
+    "color": "#5EAFFF",
+    "logo": "/images/teams/mercedes.png"
   }
 ]

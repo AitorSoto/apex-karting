@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import drivers from '../../../public/data/drivers.json';
 import teamsData from '../../../public/data/teams.json';
 import results from '../../../public/data/results.json';
+import qualifying from '../../../public/data/qualifying.json';
 
 export async function getStaticPaths() {
   return teamsData.map((team: any) => ({
@@ -14,6 +15,8 @@ const { id } = Astro.params;
 const teams = teamsData;
 
 const team = teams.find((t: any) => t.id === parseInt(id));
+if (!team) throw new Error(`Team with id ${id} not found`);
+
 const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
 
 const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
@@ -23,10 +26,11 @@ const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
 
 const driversWithStats = teamDrivers.map((driver: any) => {
   const driverResults = results.filter((r: any) => r.driverId === driver.id);
+  const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
   const points = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
-  const wins = driverResults.filter((r: any) => r.position === 1).length;
-  const podiums = driverResults.filter((r: any) => r.position <= 3).length;
-  const poles = driverResults.filter((r: any) => r.pole).length;
+  const wins = driverResults.filter((r: any) => r.position === 1 && !r.dnf).length;
+  const podiums = driverResults.filter((r: any) => r.position <= 3 && !r.dnf).length;
+  const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).length;
   
   return { ...driver, points, wins, podiums, poles };
 });

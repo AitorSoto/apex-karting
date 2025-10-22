@@ -16,7 +16,10 @@ const { id } = Astro.params;
 const races = racesData;
 
 const race = races.find((r: any) => r.id === parseInt(id));
+if (!race) throw new Error(`Race with id ${id} not found`);
+
 const circuit = circuits.find((c: any) => c.id === race.circuitId);
+if (!circuit) throw new Error(`Circuit with id ${race.circuitId} not found`);
 const raceResults = results.filter((r: any) => r.raceId === parseInt(id));
 
 // Parse lap time string (mm:ss.milliseconds) to milliseconds
