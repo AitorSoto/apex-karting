@@ -43,13 +43,13 @@ const driversWithStats = teamDrivers.map((driver: any) => {
 
   <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
     <div class="flex items-center gap-8 mb-6">
-      <div class="w-32 h-32 rounded-full flex items-center justify-center" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`}>
+      <div class="w-32 h-32 rounded-full flex items-center justify-center" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
         <span class="text-5xl font-black" style={`color: ${team.color}`}>
           {team.name.charAt(0)}
         </span>
       </div>
       <div>
-        <h1 class="text-5xl font-black mb-4">{team.name}</h1>
+        <h1 class="text-5xl font-black mb-4" transition:name={`team-name-${team.id}`}>{team.name}</h1>
         <div class="text-3xl font-bold text-red-500">{teamPoints} Puntos</div>
       </div>
     </div>
