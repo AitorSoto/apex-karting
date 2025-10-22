@@ -1,7 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
 ---
 
 <Layout title="Admin - Apex Karting">
@@ -13,6 +11,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
   <div class="flex gap-2 md:gap-4 mb-6 md:mb-8">
     <button id="tabRaceResults" class="px-4 md:px-6 py-2 md:py-3 bg-red-600 rounded font-bold uppercase text-xs md:text-sm transition-colors">Race Results</button>
     <button id="tabQualifying" class="px-4 md:px-6 py-2 md:py-3 bg-zinc-700 hover:bg-zinc-600 rounded font-bold uppercase text-xs md:text-sm transition-colors">Qualifying</button>
+    <button id="tabDriverGen" class="px-4 md:px-6 py-2 md:py-3 bg-zinc-700 hover:bg-zinc-600 rounded font-bold uppercase text-xs md:text-sm transition-colors">Driver Generator</button>
   </div>
 
   <!-- Race Results Tab -->
@@ -73,6 +72,55 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     </div>
 
     <div id="raceMessage" class="mt-6 p-4 rounded hidden"></div>
+  </div>
+
+  <!-- Driver Generator Tab -->
+  <div id="driverGenTab" class="bg-zinc-900 rounded-lg p-4 md:p-8 border-2 border-zinc-800 hidden">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 border-l-4 border-red-600 pl-4">Random Driver Distributor</h2>
+    
+    <div class="space-y-6">
+      <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-700">
+        <h3 class="font-bold text-sm uppercase mb-2 text-red-500">⚠️ Warning</h3>
+        <p class="text-sm text-zinc-400">This will randomly distribute existing drivers, assigning 2 drivers per team. All team IDs will be updated!</p>
+      </div>
+
+      <div class="bg-zinc-800 rounded-lg p-6">
+        <h3 class="text-xl font-bold mb-4">Current Status</h3>
+        <div id="driverStats" class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-zinc-900 p-4 rounded">
+            <div class="text-3xl font-black text-red-500" id="driverCount">0</div>
+            <div class="text-sm text-zinc-400">Total Drivers</div>
+          </div>
+          <div class="bg-zinc-900 p-4 rounded">
+            <div class="text-3xl font-black text-red-500" id="teamCount">0</div>
+            <div class="text-sm text-zinc-400">Total Teams</div>
+          </div>
+        </div>
+        <div id="teamsList" class="space-y-2 mb-6">
+          <p class="text-zinc-400">Loading teams...</p>
+        </div>
+        
+        <button id="generateDrivers" class="w-full px-6 py-4 bg-red-600 hover:bg-red-700 rounded font-bold uppercase text-lg transition-colors">
+          🎲 Randomly Assign 2 Drivers Per Team
+        </button>
+      </div>
+
+      <div id="generatedDriversPreview" class="bg-zinc-800 rounded-lg p-6 hidden">
+        <h3 class="text-xl font-bold mb-4 text-green-500">Generated Drivers Preview</h3>
+        <div id="previewContent" class="space-y-4 mb-6">
+        </div>
+        <div class="flex gap-4">
+          <button id="saveGeneratedDrivers" class="flex-1 px-6 py-4 bg-green-600 hover:bg-green-700 rounded font-bold uppercase transition-colors">
+            ✓ Save to File
+          </button>
+          <button id="cancelGeneration" class="flex-1 px-6 py-4 bg-zinc-700 hover:bg-zinc-600 rounded font-bold uppercase transition-colors">
+            ✗ Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="driverGenMessage" class="mt-6 p-4 rounded hidden"></div>
   </div>
 
   <!-- Qualifying Tab -->
@@ -141,16 +189,15 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
 <script is:inline src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 
 <script>
-  let races = [];
-  let drivers = [];
-  let teams = [];
-  let results = [];
-  let qualifying = [];
-  let currentTab = 'race';
-  let currentRaceId = null;
-  let currentQualyRaceId = null;
-  let raceSortable = null;
-  let qualySortable = null;
+  let races: any[] = [];
+  let drivers: any[] = [];
+  let teams: any[] = [];
+  let results: any[] = [];
+  let qualifying: any[] = [];
+  let currentRaceId: number | null = null;
+  let currentQualyRaceId: number | null = null;
+  let raceSortable: any = null;
+  let qualySortable: any = null;
 
   // Point system: top 10 positions
   const POINTS_SYSTEM = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
@@ -268,7 +315,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
       raceSortable.destroy();
     }
     
-    raceSortable = new Sortable(resultsDiv, {
+    raceSortable = new (window as any).Sortable(resultsDiv, {
       group: {
         name: 'race',
         pull: true,
@@ -282,7 +329,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     });
 
     // Make available drivers sortable too (move instead of clone)
-    new Sortable(availableDiv, {
+    new (window as any).Sortable(availableDiv, {
       group: {
         name: 'race',
         pull: true,
@@ -290,19 +337,19 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
       },
       animation: 150,
       sort: false,
-      onAdd: (evt) => {
+      onAdd: (_evt: any) => {
         // When a driver is dragged back, update the race results
         updateRaceResultsFromDrag();
       },
-      onRemove: (evt) => {
+      onRemove: (_evt: any) => {
         // When a driver is dragged out, update the race results
         setTimeout(() => updateRaceResultsFromDrag(), 10);
       }
     });
   }
 
-  function renderRaceDetails(raceResults) {
-    const detailsContent = document.getElementById('raceDetailsContent');
+  function renderRaceDetails(raceResults: any[]) {
+    const detailsContent = document.getElementById('raceDetailsContent')!;
     detailsContent.innerHTML = raceResults.map(result => {
       const driver = drivers.find(d => d.id === result.driverId);
       return `
@@ -357,19 +404,38 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
   document.getElementById('tabRaceResults')?.addEventListener('click', function() {
     document.getElementById('raceResultsTab')!.classList.remove('hidden');
     document.getElementById('qualifyingTab')!.classList.add('hidden');
+    document.getElementById('driverGenTab')!.classList.add('hidden');
     this.classList.remove('bg-zinc-700', 'hover:bg-zinc-600');
     this.classList.add('bg-red-600');
     document.getElementById('tabQualifying')!.classList.remove('bg-red-600');
     document.getElementById('tabQualifying')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+    document.getElementById('tabDriverGen')!.classList.remove('bg-red-600');
+    document.getElementById('tabDriverGen')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
   });
 
   document.getElementById('tabQualifying')?.addEventListener('click', function() {
     document.getElementById('raceResultsTab')!.classList.add('hidden');
     document.getElementById('qualifyingTab')!.classList.remove('hidden');
+    document.getElementById('driverGenTab')!.classList.add('hidden');
     this.classList.remove('bg-zinc-700', 'hover:bg-zinc-600');
     this.classList.add('bg-red-600');
     document.getElementById('tabRaceResults')!.classList.remove('bg-red-600');
     document.getElementById('tabRaceResults')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+    document.getElementById('tabDriverGen')!.classList.remove('bg-red-600');
+    document.getElementById('tabDriverGen')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+  });
+
+  document.getElementById('tabDriverGen')?.addEventListener('click', function() {
+    document.getElementById('raceResultsTab')!.classList.add('hidden');
+    document.getElementById('qualifyingTab')!.classList.add('hidden');
+    document.getElementById('driverGenTab')!.classList.remove('hidden');
+    this.classList.remove('bg-zinc-700', 'hover:bg-zinc-600');
+    this.classList.add('bg-red-600');
+    document.getElementById('tabRaceResults')!.classList.remove('bg-red-600');
+    document.getElementById('tabRaceResults')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+    document.getElementById('tabQualifying')!.classList.remove('bg-red-600');
+    document.getElementById('tabQualifying')!.classList.add('bg-zinc-700', 'hover:bg-zinc-600');
+    loadTeamsForGenerator();
   });
 
   // Race selection
@@ -423,7 +489,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     
     // Find the fastest lap in this race and award bonus point
     const raceResults = results.filter(r => r.raceId === currentRaceId);
-    let fastestResult = null;
+    let fastestResult: any = null;
     let fastestTime = Infinity;
     
     raceResults.forEach(result => {
@@ -437,7 +503,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     });
     
     // Award +1 point for fastest lap (only if they finished and not DNF)
-    if (fastestResult && !fastestResult.dnf) {
+    if (fastestResult && !fastestResult.dnf && fastestResult.points !== undefined) {
       fastestResult.points += 1;
     }
     
@@ -551,7 +617,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
       qualySortable.destroy();
     }
     
-    qualySortable = new Sortable(qualyDiv, {
+    qualySortable = new (window as any).Sortable(qualyDiv, {
       group: {
         name: 'qualy',
         pull: true,
@@ -565,7 +631,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     });
 
     // Make available drivers sortable too (move instead of clone)
-    new Sortable(availableDiv, {
+    new (window as any).Sortable(availableDiv, {
       group: {
         name: 'qualy',
         pull: true,
@@ -573,19 +639,19 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
       },
       animation: 150,
       sort: false,
-      onAdd: (evt) => {
+      onAdd: (_evt: any) => {
         // When a driver is dragged back, update qualifying
         updateQualifyingFromDrag();
       },
-      onRemove: (evt) => {
+      onRemove: (_evt: any) => {
         // When a driver is dragged out, update qualifying
         setTimeout(() => updateQualifyingFromDrag(), 10);
       }
     });
   }
 
-  function renderQualyDetails(qualyResults) {
-    const detailsContent = document.getElementById('qualyDetailsContent');
+  function renderQualyDetails(qualyResults: any[]) {
+    const detailsContent = document.getElementById('qualyDetailsContent')!;
     detailsContent.innerHTML = qualyResults.map(result => {
       const driver = drivers.find(d => d.id === result.driverId);
       return `
@@ -606,7 +672,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
   }
 
   function updateQualifyingFromDrag() {
-    const qualyDiv = document.getElementById('qualifyingList');
+    const qualyDiv = document.getElementById('qualifyingList')!;
     const driverCards = Array.from(qualyDiv.querySelectorAll('.driver-card'));
     
     // Remove old qualifying for this race
@@ -614,7 +680,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     
     // Add new qualifying based on drag order
     driverCards.forEach((card, index) => {
-      const driverId = parseInt(card.getAttribute('data-driver-id'));
+      const driverId = parseInt(card.getAttribute('data-driver-id')!);
       const position = index + 1;
       
       // Get existing data or defaults
@@ -630,7 +696,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     });
     
     // Re-render
-    loadQualifying(currentQualyRaceId);
+    loadQualifying(currentQualyRaceId!);
   }
 
   document.getElementById('qualyRaceSelect')?.addEventListener('change', function(e) {
@@ -651,7 +717,7 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     
     // Update lap times from details section
     inputs.forEach(input => {
-      const driverId = parseInt(input.getAttribute('data-driver-id'));
+      const driverId = parseInt(input.getAttribute('data-driver-id')!);
       const field = input.getAttribute('data-field');
       const qualyIndex = qualifying.findIndex(q => q.raceId === currentQualyRaceId && q.driverId === driverId);
       
@@ -682,6 +748,117 @@ const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD;
     }
     
     loadQualifying(currentQualyRaceId);
+  });
+
+  // Driver Generator functionality
+  let generatedDriversData: any[] = [];
+
+  function shuffleArray(array: any[]): any[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  function loadTeamsForGenerator() {
+    document.getElementById('driverCount')!.textContent = drivers.length.toString();
+    document.getElementById('teamCount')!.textContent = teams.length.toString();
+    
+    const teamsList = document.getElementById('teamsList')!;
+    teamsList.innerHTML = teams.map(team => {
+      const currentDrivers = drivers.filter(d => d.teamId === team.id);
+      return `
+        <div class="flex items-center justify-between p-3 bg-zinc-900 rounded border border-zinc-700">
+          <div>
+            <span class="font-bold" style="color: ${team.color}">${team.name}</span>
+            <span class="text-sm text-zinc-400 ml-2">(ID: ${team.id})</span>
+          </div>
+          <span class="text-xs text-zinc-500">Currently: ${currentDrivers.length} drivers</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function showDriverGenMessage(text: string, type: 'success' | 'error') {
+    const message = document.getElementById('driverGenMessage')!;
+    message.textContent = text;
+    message.className = `mt-6 p-4 rounded ${type === 'success' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`;
+    message.classList.remove('hidden');
+    setTimeout(() => message.classList.add('hidden'), 5000);
+  }
+
+  document.getElementById('generateDrivers')?.addEventListener('click', function() {
+    // Check if we have enough drivers
+    const requiredDrivers = teams.length * 2;
+    if (drivers.length < requiredDrivers) {
+      showDriverGenMessage(`Not enough drivers! Need ${requiredDrivers}, have ${drivers.length}`, 'error');
+      return;
+    }
+
+    // Shuffle all drivers
+    const shuffledDrivers = shuffleArray(drivers);
+    
+    // Assign 2 drivers per team
+    generatedDriversData = shuffledDrivers.map((driver, index) => {
+      const teamIndex = Math.floor(index / 2) % teams.length;
+      const team = teams[teamIndex];
+      return {
+        ...driver,
+        teamId: team.id
+      };
+    });
+
+    // Show preview
+    const previewContent = document.getElementById('previewContent')!;
+    const groupedByTeam = teams.map(team => {
+      const teamDrivers = generatedDriversData.filter(d => d.teamId === team.id);
+      return `
+        <div class="bg-zinc-900 rounded p-4">
+          <h4 class="font-bold mb-3" style="color: ${team.color}">${team.name}</h4>
+          <div class="space-y-2">
+            ${teamDrivers.map(driver => `
+              <div class="flex items-center justify-between p-2 bg-zinc-800 rounded">
+                <span class="font-bold">#${driver.number} ${driver.name}</span>
+                <span class="text-xs" style="color: ${team.color}">${driver.nationality}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    previewContent.innerHTML = groupedByTeam;
+    document.getElementById('generatedDriversPreview')!.classList.remove('hidden');
+  });
+
+  document.getElementById('cancelGeneration')?.addEventListener('click', function() {
+    document.getElementById('generatedDriversPreview')!.classList.add('hidden');
+    generatedDriversData = [];
+  });
+
+  document.getElementById('saveGeneratedDrivers')?.addEventListener('click', async function() {
+    if (generatedDriversData.length === 0) return;
+
+    try {
+      const response = await fetch('/api/drivers.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(generatedDriversData)
+      });
+
+      if (response.ok) {
+        drivers = generatedDriversData;
+        showDriverGenMessage(`Successfully generated ${generatedDriversData.length} drivers!`, 'success');
+        document.getElementById('generatedDriversPreview')!.classList.add('hidden');
+        generatedDriversData = [];
+      } else {
+        showDriverGenMessage('Failed to save drivers to file', 'error');
+      }
+    } catch (error) {
+      showDriverGenMessage('Error saving drivers: ' + error, 'error');
+    }
   });
 
   loadData();
