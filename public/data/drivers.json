@@ -5,7 +5,7 @@
     "number": 21,
     "teamId": 1,
     "nationality": "ESP",
-    "image": "/images/drivers/sainz.jpg"
+    "image": "/images/drivers/aitors.JPG"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "number": 16,
     "teamId": 1,
     "nationality": "ESP",
-    "image": "/images/drivers/leclerc.jpg"
+    "image": "/images/drivers/ethanc.jpg"
   },
   {
     "id": 3,
@@ -21,71 +21,71 @@
     "number": 13,
     "teamId": 2,
     "nationality": "ESP",
-    "image": "/images/drivers/verstappen.jpg"
+    "image": ""
   },
   {
     "id": 4,
     "name": "Esteban Brito",
     "number": 17,
-    "teamId": 2,
+    "teamId": 4,
     "nationality": "ESP",
-    "image": "/images/drivers/perez.jpg"
+    "image": ""
   },
   {
     "id": 5,
     "name": "Álvaro Sánchez",
     "number": 6,
-    "teamId": 3,
+    "teamId": 5,
     "nationality": "ESP",
-    "image": "/images/drivers/hamilton.jpg"
+    "image": ""
   },
   {
     "id": 6,
     "name": "Ethan Schultz",
     "number": 33,
-    "teamId": 3,
+    "teamId": 4,
     "nationality": "USA",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 7,
     "name": "Berni Ollero",
     "number": 5,
-    "teamId": 4,
+    "teamId": 3,
     "nationality": "ESP",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 8,
     "name": "David Bohez",
     "number": 55,
-    "teamId": 4,
+    "teamId": 3,
     "nationality": "BEL",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 9,
     "name": "Diego Paterno",
     "number": 67,
-    "teamId": 5,
+    "teamId": 6,
     "nationality": "BEL",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 10,
     "name": "Guille Candeia",
     "number": 7,
-    "teamId": 5,
+    "teamId": 2,
     "nationality": "POR",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 11,
     "name": "Lenny Machuca",
     "number": 14,
-    "teamId": 6,
+    "teamId": 5,
     "nationality": "ESP",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   },
   {
     "id": 12,
@@ -93,7 +93,7 @@
     "number": 9,
     "teamId": 6,
     "nationality": "ESP",
-    "image": "/images/drivers/russell.jpg"
+    "image": ""
   }
 
 ]

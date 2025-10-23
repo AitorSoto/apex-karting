@@ -3,64 +3,72 @@
     "id": 1,
     "name": "Elche Grand Prix",
     "circuitId": 1,
-    "date": "2025-11-15",
+    "date": "Fecha por detallar",
     "round": 1,
-    "status": "completed"
+    "status": "upcoming"
   },
   {
     "id": 2,
-    "name": "Villafranqueza Grand Prix",
-    "circuitId": 2,
-    "date": "2025-12-15",
-    "round": 2,
-    "status": "completed"
+    "name": "La Vila Grand Prix",
+    "circuitId": 7,
+    "date": "Fecha por detallar",
+    "round": 7,
+    "status": "upcoming"
   },
   {
     "id": 3,
-    "name": "San Vicente Electric Grand Prix",
-    "circuitId": 3,
-    "date": "2025-12-15",
-    "round": 3,
-    "status": "completed"
+    "name": "Villafranqueza Grand Prix",
+    "circuitId": 2,
+    "date": "Fecha por detallar",
+    "round": 2,
+    "status": "upcoming"
   },
   {
     "id": 4,
     "name": "Karting Iglesias Grand Prix",
     "circuitId": 4,
-    "date": "2025-01-15",
+    "date": "Fecha por detallar",
     "round": 4,
-    "status": "completed"
-  },
-  {
-    "id": 5,
-    "name": "OrioKart Grand Prix",
-    "circuitId": 5,
-    "date": "2026-02-15",
-    "round": 5,
     "status": "upcoming"
   },
   {
-    "id": 6,
+    "id": 5,
     "name": "Finestrat Grand Prix",
     "circuitId": 6,
-    "date": "2026-02-15",
+    "date": "2Fecha por detallar",
     "round": 6,
     "status": "upcoming"
   },
   {
+    "id": 6,
+    "name": "Orihuela Costa Grand Prix",
+    "circuitId": 8,
+    "date": "Fecha por detallar",
+    "round": 5,
+    "status": "upcoming"
+  },
+  {
     "id": 7,
-    "name": "La Vila Grand Prix",
-    "circuitId": 7,
-    "date": "2026-03-15",
-    "round": 7,
+    "name": "San Vicente Electric Grand Prix",
+    "circuitId": 3,
+    "date": "Fecha por detallar",
+    "round": 3,
     "status": "upcoming"
   },
   {
     "id": 8,
     "name": "Villena Grand Prix",
     "circuitId": 8,
-    "date": "2026-04-15",
+    "date": "Fecha por detallar",
     "round": 8,
+    "status": "upcoming"
+  },
+  {
+    "id": 9,
+    "name": "OrioKart Grand Prix",
+    "circuitId": 5,
+    "date": "Fecha por detallar",
+    "round": 5,
     "status": "upcoming"
   }
 ]

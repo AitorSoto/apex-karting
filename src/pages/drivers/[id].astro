@@ -19,6 +19,13 @@ const drivers = driversData;
 const driver = drivers.find((d: any) => d.id === parseInt(id));
 if (!driver) throw new Error(`Driver with id ${id} not found`);
 
+const countryCodeMap: Record<string, string> = {
+  'ESP': 'es',
+  'USA': 'us',
+  'BEL': 'be',
+  'POR': 'pt',
+};
+
 const team = teams.find((t: any) => t.id === driver.teamId);
 if (!team) throw new Error(`Team with id ${driver.teamId} not found`);
 const driverResults = results.filter((r: any) => r.driverId === driver.id);
@@ -53,18 +60,23 @@ const raceHistory = driverResults.map((result: any) => {
   </a>
 
   <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
-    <div class="flex items-start justify-between">
-      <div>
+    <div class="flex items-start justify-between gap-8">
+      <div class="flex-1">
         <div class="text-6xl font-black text-zinc-700 mb-4" transition:name={`driver-number-${driver.id}`}>#{driver.number}</div>
         <h1 class="text-5xl font-black mb-4" transition:name={`driver-name-${driver.id}`}>{driver.name}</h1>
         <div class="flex items-center gap-3 mb-6">
           <span class="w-4 h-4 rounded" style={`background-color: ${team.color}`}></span>
           <span class="text-xl" style={`color: ${team.color}`}>{team.name}</span>
         </div>
-        <div class="text-zinc-400 text-lg">
-          <span class="font-bold">Nacionalidad:</span> {driver.nationality}
+        <div class="flex items-center gap-2">
+          <span class={`fi fi-${countryCodeMap[driver.nationality] || 'xx'} text-4xl`}></span>
         </div>
       </div>
+      {driver.image && (
+        <div class="w-48 h-48 rounded-lg overflow-hidden border-4" style={`border-color: ${team.color}`}>
+          <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
+        </div>
+      )}
     </div>
   </div>
 

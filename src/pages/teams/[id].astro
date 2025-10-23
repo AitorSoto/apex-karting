@@ -43,10 +43,14 @@ const driversWithStats = teamDrivers.map((driver: any) => {
 
   <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
     <div class="flex items-center gap-8 mb-6">
-      <div class="w-32 h-32 rounded-full flex items-center justify-center" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
-        <span class="text-5xl font-black" style={`color: ${team.color}`}>
-          {team.name.charAt(0)}
-        </span>
+      <div class="w-32 h-32 rounded-full flex items-center justify-center overflow-hidden" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
+        {team.logo ? (
+          <img src={team.logo} alt={`${team.name} logo`} class="w-full h-full object-cover" />
+        ) : (
+          <span class="text-5xl font-black" style={`color: ${team.color}`}>
+            {team.name.charAt(0)}
+          </span>
+        )}
       </div>
       <div>
         <h1 class="text-5xl font-black mb-4" transition:name={`team-name-${team.id}`}>{team.name}</h1>
@@ -56,29 +60,36 @@ const driversWithStats = teamDrivers.map((driver: any) => {
   </div>
 
   <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Pilotos del Equipo</h2>
-  <div class="grid md:grid-cols-2 gap-6 mb-8">
+  <div class="flex flex-col md:flex-row gap-6 mb-8">
     {driversWithStats.map((driver: any) => (
-      <a href={`/drivers/${driver.id}`} class="bg-zinc-900 rounded-lg p-6 border-2 border-zinc-800 hover:border-red-600 transition-all group">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">{driver.name}</h3>
-          <span class="text-4xl font-black text-zinc-700">#{driver.number}</span>
-        </div>
-        <div class="grid grid-cols-4 gap-4 text-center">
-          <div>
-            <div class="text-zinc-400 text-sm">Puntos</div>
-            <div class="font-bold text-xl">{driver.points}</div>
+      <a href={`/drivers/${driver.id}`} class="bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 hover:border-red-600 transition-all group">
+        {driver.image && (
+          <div class="h-48 bg-gradient-to-br from-zinc-800 to-zinc-900 overflow-hidden">
+            <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
           </div>
-          <div>
-            <div class="text-zinc-400 text-sm">Victorias</div>
-            <div class="font-bold text-xl">{driver.wins}</div>
+        )}
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">{driver.name}</h3>
+            <span class="text-4xl font-black text-zinc-700">#{driver.number}</span>
           </div>
-          <div>
-            <div class="text-zinc-400 text-sm">Podios</div>
-            <div class="font-bold text-xl">{driver.podiums}</div>
-          </div>
-          <div>
-            <div class="text-zinc-400 text-sm">Poles</div>
-            <div class="font-bold text-xl">{driver.poles}</div>
+          <div class="grid grid-cols-4 gap-4 text-center">
+            <div>
+              <div class="text-zinc-400 text-sm">Puntos</div>
+              <div class="font-bold text-xl">{driver.points}</div>
+            </div>
+            <div>
+              <div class="text-zinc-400 text-sm">Victorias</div>
+              <div class="font-bold text-xl">{driver.wins}</div>
+            </div>
+            <div>
+              <div class="text-zinc-400 text-sm">Podios</div>
+              <div class="font-bold text-xl">{driver.podiums}</div>
+            </div>
+            <div>
+              <div class="text-zinc-400 text-sm">Poles</div>
+              <div class="font-bold text-xl">{driver.poles}</div>
+            </div>
           </div>
         </div>
       </a>
