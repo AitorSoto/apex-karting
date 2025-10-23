@@ -76,7 +76,7 @@ const resultsWithDrivers = raceResults.map((result: any) => {
           </div>
           <div>
             <div class="text-zinc-400 text-xs uppercase mb-1">Pista</div>
-            <div class="font-bold text-sm">{circuit.length}km • {circuit.turns} curvas</div>
+            <div class="font-bold text-sm">{typeof circuit.length === 'number' ? `${circuit.length}km` : circuit.length} • {circuit.turns} curvas</div>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ const resultsWithDrivers = raceResults.map((result: any) => {
         </div>
         <div>
           <div class="text-zinc-400 text-sm">Info del Circuito</div>
-          <div class="font-bold">{circuit.length}km • {circuit.turns} curvas</div>
+          <div class="font-bold">{typeof circuit.length === 'number' ? `${circuit.length}km` : circuit.length} • {circuit.turns} curvas</div>
         </div>
       </div>
     </div>

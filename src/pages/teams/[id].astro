@@ -17,6 +17,8 @@ const teams = teamsData;
 const team = teams.find((t: any) => t.id === parseInt(id));
 if (!team) throw new Error(`Team with id ${id} not found`);
 
+const teamDescription = `${team.name} - Equipo de Apex Karting`;
+
 const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
 
 const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
@@ -36,7 +38,11 @@ const driversWithStats = teamDrivers.map((driver: any) => {
 });
 ---
 
-<Layout title={`${team.name} - Apex Karting`}>
+<Layout 
+  title={`${team.name} - Apex Karting`}
+  description={teamDescription}
+  image={team.logo || undefined}
+>
   <a href="/teams" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
     ← Volver a Equipos
   </a>

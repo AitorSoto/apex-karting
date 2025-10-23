@@ -75,7 +75,7 @@ const nextRaceCircuit = nextRace ? circuits.find((c: any) => c.id === nextRace.c
           {nextRaceCircuit && (
             <div class="text-sm text-zinc-500 mb-2">
               {nextRaceCircuit.name} • {nextRaceCircuit.location}
-              <div class="mt-1">{nextRaceCircuit.length}km • {nextRaceCircuit.turns} curvas</div>
+              <div class="mt-1">{typeof nextRaceCircuit.length === 'number' ? `${nextRaceCircuit.length}km` : nextRaceCircuit.length} • {nextRaceCircuit.turns} curvas</div>
             </div>
           )}
           <a href={`/races/${nextRace.id}`} class="inline-block mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-bold text-sm transition-colors">

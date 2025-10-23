@@ -35,7 +35,7 @@ const racesWithCircuits = races.map((race: any) => {
             <div class="text-zinc-500">{race.circuit.location}</div>
             <div class="text-zinc-500">{race.date}</div>
             <div class="flex gap-4 text-zinc-400 mt-2">
-              <span>{race.circuit.length}km</span>
+              <span>{typeof race.circuit.length === 'number' ? `${race.circuit.length}km` : race.circuit.length}</span>
               <span>•</span>
               <span>{race.circuit.turns} curvas</span>
             </div>
@@ -58,7 +58,7 @@ const racesWithCircuits = races.map((race: any) => {
             <div class="text-sm text-zinc-500">{race.date}</div>
           </div>
           <div class="text-right text-zinc-400 flex-shrink-0">
-            <div class="text-sm mb-1">Longitud: {race.circuit.length}km</div>
+            <div class="text-sm mb-1">Longitud: {typeof race.circuit.length === 'number' ? `${race.circuit.length}km` : race.circuit.length}</div>
             <div class="text-sm">Curvas: {race.circuit.turns}</div>
           </div>
         </div>

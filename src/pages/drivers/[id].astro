@@ -19,6 +19,8 @@ const drivers = driversData;
 const driver = drivers.find((d: any) => d.id === parseInt(id));
 if (!driver) throw new Error(`Driver with id ${id} not found`);
 
+const driverDescription = `${driver.name} - #${driver.number} - Apex Karting`;
+
 const countryCodeMap: Record<string, string> = {
   'ESP': 'es',
   'USA': 'us',
@@ -54,7 +56,11 @@ const raceHistory = driverResults.map((result: any) => {
 }).sort((a: any, b: any) => a.race.round - b.race.round);
 ---
 
-<Layout title={`${driver.name} - Apex Karting`}>
+<Layout 
+  title={`${driver.name} - Apex Karting`}
+  description={driverDescription}
+  image={driver.image || undefined}
+>
   <a href="/drivers" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
     ← Volver a Pilotos
   </a>

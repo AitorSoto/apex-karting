@@ -35,14 +35,14 @@
     "id": 5,
     "name": "Finestrat Grand Prix",
     "circuitId": 6,
-    "date": "2Fecha por detallar",
+    "date": "Fecha por detallar",
     "round": 6,
     "status": "upcoming"
   },
   {
     "id": 6,
     "name": "Orihuela Costa Grand Prix",
-    "circuitId": 8,
+    "circuitId": 9,
     "date": "Fecha por detallar",
     "round": 5,
     "status": "upcoming"
