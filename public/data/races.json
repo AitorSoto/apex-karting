@@ -12,7 +12,7 @@
     "name": "La Vila Grand Prix",
     "circuitId": 7,
     "date": "Fecha por detallar",
-    "round": 7,
+    "round": 2,
     "status": "upcoming"
   },
   {
@@ -20,7 +20,7 @@
     "name": "Villafranqueza Grand Prix",
     "circuitId": 2,
     "date": "Fecha por detallar",
-    "round": 2,
+    "round": 3,
     "status": "upcoming"
   },
   {
@@ -36,7 +36,7 @@
     "name": "Finestrat Grand Prix",
     "circuitId": 6,
     "date": "Fecha por detallar",
-    "round": 6,
+    "round": 5,
     "status": "upcoming"
   },
   {
@@ -44,7 +44,7 @@
     "name": "Orihuela Costa Grand Prix",
     "circuitId": 9,
     "date": "Fecha por detallar",
-    "round": 5,
+    "round": 6,
     "status": "upcoming"
   },
   {
@@ -52,7 +52,7 @@
     "name": "San Vicente Electric Grand Prix",
     "circuitId": 3,
     "date": "Fecha por detallar",
-    "round": 3,
+    "round": 7,
     "status": "upcoming"
   },
   {
@@ -68,7 +68,7 @@
     "name": "OrioKart Grand Prix",
     "circuitId": 5,
     "date": "Fecha por detallar",
-    "round": 5,
+    "round": 9,
     "status": "upcoming"
   }
 ]

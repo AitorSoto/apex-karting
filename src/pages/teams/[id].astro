@@ -43,6 +43,14 @@ const driversWithStats = teamDrivers.map((driver: any) => {
   description={teamDescription}
   image={team.logo || undefined}
 >
+  <style>
+    .driver-card:hover {
+      border-color: var(--team-color) !important;
+    }
+    .driver-card:hover .driver-name {
+      color: var(--team-color);
+    }
+  </style>
   <a href="/teams" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
     ← Volver a Equipos
   </a>
@@ -59,7 +67,7 @@ const driversWithStats = teamDrivers.map((driver: any) => {
         )}
       </div>
       <div>
-        <h1 class="text-5xl font-black mb-4" transition:name={`team-name-${team.id}`}>{team.name}</h1>
+        <h1 class="text-5xl font-black mb-4" style={`color: ${team.color}`} transition:name={`team-name-${team.id}`}>{team.name}</h1>
         <div class="text-3xl font-bold text-red-500">{teamPoints} Puntos</div>
       </div>
     </div>
@@ -68,7 +76,7 @@ const driversWithStats = teamDrivers.map((driver: any) => {
   <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Pilotos del Equipo</h2>
   <div class="flex flex-col md:flex-row gap-6 mb-8">
     {driversWithStats.map((driver: any) => (
-      <a href={`/drivers/${driver.id}`} class="bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 hover:border-red-600 transition-all group">
+      <a href={`/drivers/${driver.id}`} class="driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group" style={`--team-color: ${team.color}`}>
         {driver.image && (
           <div class="h-48 bg-gradient-to-br from-zinc-800 to-zinc-900 overflow-hidden">
             <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
@@ -76,7 +84,7 @@ const driversWithStats = teamDrivers.map((driver: any) => {
         )}
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">{driver.name}</h3>
+            <h3 class="driver-name text-2xl font-bold transition-colors" style={`color: ${team.color}`}>{driver.name}</h3>
             <span class="text-4xl font-black text-zinc-700">#{driver.number}</span>
           </div>
           <div class="grid grid-cols-4 gap-4 text-center">

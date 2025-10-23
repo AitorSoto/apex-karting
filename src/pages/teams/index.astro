@@ -16,13 +16,21 @@ const teamsWithStats = teams.map((team: any) => {
 ---
 
 <Layout title="Equipos - Apex Karting">
+  <style>
+    .team-card:hover {
+      border-color: var(--team-color) !important;
+    }
+    .team-card:hover .team-name {
+      color: var(--team-color);
+    }
+  </style>
   <h1 class="text-3xl md:text-5xl font-black mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
     EQUIPOS
   </h1>
 
   <div class="grid md:grid-cols-2 gap-4 md:gap-6">
     {teamsWithStats.map((team: any) => (
-      <a href={`/teams/${team.id}`} class="block bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 hover:border-red-600 transition-all group">
+      <a href={`/teams/${team.id}`} class="team-card block bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group" style={`--team-color: ${team.color}`}>
         <div class="flex items-center p-8">
           <div class="w-24 h-24 rounded-full flex items-center justify-center mr-8 overflow-hidden" style={`background-color: ${team.color}20; border: 4px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
             {team.logo ? (
@@ -34,7 +42,7 @@ const teamsWithStats = teams.map((team: any) => {
             )}
           </div>
           <div class="flex-1">
-            <h2 class="text-3xl font-bold mb-2 group-hover:text-red-500 transition-colors" transition:name={`team-name-${team.id}`}>{team.name}</h2>
+            <h2 class="team-name text-3xl font-bold mb-2 transition-colors" transition:name={`team-name-${team.id}`}>{team.name}</h2>
             <div class="flex gap-4 mb-4">
               {team.drivers.map((driver: any) => (
                 <div class="text-zinc-400">
