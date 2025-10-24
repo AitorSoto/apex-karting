@@ -13,7 +13,7 @@ const latestRaceCircuit = latestRace ? circuits.find((c: any) => c.id === latest
 // Get race winner if latest race exists
 let latestRaceWinner = null;
 if (latestRace) {
-  const winnerResult = results.find((r: any) => r.raceId === latestRace.id && r.position === 1);
+  const winnerResult: any = results.find((r: any) => r.raceId === latestRace.id && r.position === 1);
   if (winnerResult) {
     latestRaceWinner = drivers.find((d: any) => d.id === winnerResult.driverId);
   }

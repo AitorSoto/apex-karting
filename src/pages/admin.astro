@@ -30,7 +30,7 @@ import Layout from '../layouts/Layout.astro';
       <!-- Point System Info -->
       <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-700">
         <h3 class="font-bold text-sm uppercase mb-2 text-red-500">Point System</h3>
-        <p class="text-sm text-zinc-400">Points are automatically calculated: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 (top 10)</p>
+        <p class="text-sm text-zinc-400">Points are automatically calculated: 15, 12, 10, 8, 6, 4, 2, 1 (top 8 only)</p>
       </div>
 
       <!-- Drag and Drop Interface -->
@@ -199,8 +199,8 @@ import Layout from '../layouts/Layout.astro';
   let raceSortable: any = null;
   let qualySortable: any = null;
 
-  // Point system: top 10 positions
-  const POINTS_SYSTEM = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+  // Point system: top 8 positions only
+  const POINTS_SYSTEM = [15, 12, 10, 8, 6, 4, 2, 1];
 
   async function loadData() {
     try {

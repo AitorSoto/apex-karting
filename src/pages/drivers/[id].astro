@@ -41,7 +41,7 @@ const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).le
 const raceHistory = driverResults.map((result: any) => {
   const race = races.find((r: any) => r.id === result.raceId);
   const circuit = circuits.find((c: any) => c.id === race?.circuitId);
-  const qualyResult = driverQualifying.find((q: any) => q.raceId === result.raceId);
+  const qualyResult: any = driverQualifying.find((q: any) => q.raceId === result.raceId);
   const hadPole = qualyResult?.position === 1 && !qualyResult?.dnf;
   
   // Find fastest lap in this race
