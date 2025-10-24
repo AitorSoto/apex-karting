@@ -32,7 +32,7 @@ const teamsWithStats = teams.map((team: any) => {
     {teamsWithStats.map((team: any) => (
       <a href={`/teams/${team.id}`} class="team-card block bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group" style={`--team-color: ${team.color}`}>
         <div class="flex items-center p-8">
-          <div class="w-24 h-24 rounded-full flex items-center justify-center mr-8 overflow-hidden" style={`background-color: ${team.color}20; border: 4px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mr-8 overflow-hidden flex-shrink-0 aspect-square" style={`background-color: ${team.color}20; border: 4px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
             {team.logo ? (
               <img src={team.logo} alt={`${team.name} logo`} class="w-full h-full object-cover" />
             ) : (

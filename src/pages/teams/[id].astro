@@ -36,6 +36,20 @@ const driversWithStats = teamDrivers.map((driver: any) => {
   
   return { ...driver, points, wins, podiums, poles };
 });
+
+function hexToRgba(hex: string, alpha: number) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const teamColorRgba20 = hexToRgba(team.color, 0.12);
+const teamColorRgba15 = hexToRgba(team.color, 0.08);
+const teamColorRgba50 = hexToRgba(team.color, 0.3);
+const teamColorRgba40 = hexToRgba(team.color, 0.25);
+const teamColorRgba30 = hexToRgba(team.color, 0.18);
+const teamColorRgba10 = hexToRgba(team.color, 0.06);
 ---
 
 <Layout 
@@ -50,25 +64,45 @@ const driversWithStats = teamDrivers.map((driver: any) => {
     .driver-card:hover .driver-name {
       color: var(--team-color);
     }
+    .team-header::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 1rem;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--team-color), transparent 40%, transparent 60%, var(--team-color));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.8;
+      pointer-events: none;
+    }
   </style>
   <a href="/teams" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
     ← Volver a Equipos
   </a>
 
-  <div class="bg-zinc-900 rounded-lg p-8 mb-8 border-l-4" style={`border-color: ${team.color}`}>
-    <div class="flex items-center gap-8 mb-6">
-      <div class="w-32 h-32 rounded-full flex items-center justify-center overflow-hidden" style={`background-color: ${team.color}20; border: 6px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
-        {team.logo ? (
-          <img src={team.logo} alt={`${team.name} logo`} class="w-full h-full object-cover" />
-        ) : (
-          <span class="text-5xl font-black" style={`color: ${team.color}`}>
-            {team.name.charAt(0)}
-          </span>
-        )}
+  <div class="team-header relative rounded-2xl p-6 md:p-10 mb-8 shadow-2xl overflow-visible" style={`--team-color: ${team.color}; background: linear-gradient(135deg, ${teamColorRgba20} 0%, #18181b 30%, #18181b 70%, ${teamColorRgba15} 100%)`}>
+    <div class="absolute top-0 left-0 w-full h-full rounded-2xl opacity-40 pointer-events-none" style={`background: radial-gradient(circle at 20% 50%, ${teamColorRgba50} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${teamColorRgba40} 0%, transparent 50%)`}></div>
+    <div class="relative flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
+      <div class="relative group">
+        <div class="absolute inset-0 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity" style={`background-color: ${team.color}`}></div>
+        <div class="relative w-28 h-28 md:w-36 md:h-36 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 aspect-square shadow-lg" style={`background: linear-gradient(135deg, ${teamColorRgba30}, ${teamColorRgba10}); border: 4px solid ${team.color}`} transition:name={`team-logo-${team.id}`}>
+          {team.logo ? (
+            <img src={team.logo} alt={`${team.name} logo`} class="w-full h-full object-cover" />
+          ) : (
+            <span class="text-4xl md:text-6xl font-black" style={`color: ${team.color}`}>
+              {team.name.charAt(0)}
+            </span>
+          )}
+        </div>
       </div>
-      <div>
-        <h1 class="text-5xl font-black mb-4" style={`color: ${team.color}`} transition:name={`team-name-${team.id}`}>{team.name}</h1>
-        <div class="text-3xl font-bold text-red-500">{teamPoints} Puntos</div>
+      <div class="flex-1 text-center md:text-left">
+        <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight" style={`color: ${team.color}; text-shadow: 0 0 30px ${teamColorRgba40}`} transition:name={`team-name-${team.id}`}>{team.name}</h1>
+        <div class="inline-flex items-center gap-3 bg-zinc-950/50 backdrop-blur-sm rounded-full px-6 py-3 border border-zinc-700">
+          <span class="text-3xl md:text-4xl font-black bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent">{teamPoints}</span>
+          <span class="text-lg md:text-xl text-zinc-400 font-semibold">Puntos</span>
+        </div>
       </div>
     </div>
   </div>
