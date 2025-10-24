@@ -79,7 +79,7 @@ const raceHistory = driverResults.map((result: any) => {
         </div>
       </div>
       {driver.image && (
-        <div class="w-48 h-48 rounded-lg overflow-hidden border-4" style={`border-color: ${team.color}`} transition:name={`driver-image-${driver.id}`}>
+        <div class="w-64 h-64 rounded-lg border-4 flex items-center justify-center overflow-hidden" style={`border-color: ${team.color}; background: linear-gradient(135deg, ${team.color}15 0%, ${team.color}30 100%)`} transition:name={`driver-image-${driver.id}`}>
           <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
         </div>
       )}

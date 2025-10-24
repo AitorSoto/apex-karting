@@ -51,7 +51,7 @@ const driversByTeam = teams.map((team: any) => ({
             class="driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group"
             style={`--team-color: ${driver.team?.color}`}
           >
-            <div class="h-48 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center relative overflow-hidden" transition:name={driver.image ? `driver-image-${driver.id}` : `driver-number-${driver.id}`}>
+            <div class="h-64 flex items-center justify-center relative overflow-hidden" style={`background: linear-gradient(135deg, ${driver.team?.color}15 0%, ${driver.team?.color}30 100%)`} transition:name={driver.image ? `driver-image-${driver.id}` : `driver-number-${driver.id}`}>
               {driver.image ? (
                 <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
               ) : (
