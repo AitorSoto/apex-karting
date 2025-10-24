@@ -30,7 +30,8 @@
     "number": 17,
     "teamId": 4,
     "nationality": "ESP",
-    "image": ""
+    "image": "/images/drivers/estebanb.jpg",
+    "imagePosition": "50% 10%"
   },
   {
     "id": 5,
