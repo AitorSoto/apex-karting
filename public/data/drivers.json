@@ -13,7 +13,8 @@
     "number": 16,
     "teamId": 1,
     "nationality": "ESP",
-    "image": "/images/drivers/ethanc.jpg"
+    "image": "/images/drivers/ethanc.jpg",
+    "imagePosition": "50% 40%"
   },
   {
     "id": 3,
@@ -53,7 +54,8 @@
     "number": 5,
     "teamId": 3,
     "nationality": "ESP",
-    "image": ""
+    "image": "/images/drivers/bernio.jpg",
+    "imagePosition": "50% 0%"
   },
   {
     "id": 8,
@@ -61,7 +63,8 @@
     "number": 55,
     "teamId": 3,
     "nationality": "BEL",
-    "image": "/images/drivers/davidb.jpg"
+    "image": "/images/drivers/davidb.jpg",
+    "imagePosition": "50% 40%"
   },
   {
     "id": 9,

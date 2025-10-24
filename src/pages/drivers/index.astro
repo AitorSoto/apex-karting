@@ -34,6 +34,30 @@ const driversByTeam = teams.map((team: any) => ({
       color: var(--team-color);
       opacity: 1;
     }
+    .driver-33-easter:hover .easter-egg-message {
+      opacity: 1;
+    }
+    .easter-egg-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #00352F 0%, #00594F 100%);
+      padding: 1.5rem 2.5rem;
+      border-radius: 0.5rem;
+      border: 2px solid #00D9B1;
+      box-shadow: 0 0 30px rgba(0, 217, 177, 0.3);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #00D9B1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      text-align: center;
+    }
   </style>
   <h1 class="text-3xl md:text-5xl font-black mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">
     PILOTOS
@@ -48,15 +72,21 @@ const driversByTeam = teams.map((team: any) => ({
         {drivers.map((driver: any) => (
           <a 
             href={`/drivers/${driver.id}`} 
-            class="driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group"
+            class={`driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group ${driver.number === 33 ? 'driver-33-easter' : ''}`}
             style={`--team-color: ${driver.team?.color}`}
+            data-driver-number={driver.number}
           >
             <div class="h-64 flex items-center justify-center relative overflow-hidden" style={`background: linear-gradient(135deg, ${driver.team?.color}15 0%, ${driver.team?.color}30 100%)`} transition:name={driver.image ? `driver-image-${driver.id}` : `driver-number-${driver.id}`}>
               {driver.image ? (
-                <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
+                <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" style={`object-position: ${driver.imagePosition || 'top'}`} />
               ) : (
                 <div class="driver-number text-8xl font-black text-zinc-700 transition-colors">
                   {driver.number}
+                </div>
+              )}
+              {driver.number === 33 && (
+                <div class="easter-egg-message">
+                  Como 33? Repiteme ese numerín
                 </div>
               )}
             </div>

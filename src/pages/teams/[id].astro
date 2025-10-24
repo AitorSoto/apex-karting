@@ -79,7 +79,7 @@ const driversWithStats = teamDrivers.map((driver: any) => {
       <a href={`/drivers/${driver.id}`} class="driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group" style={`--team-color: ${team.color}`}>
         <div class="h-64 flex items-center justify-center overflow-hidden" style={`background: linear-gradient(135deg, ${team.color}15 0%, ${team.color}30 100%)`}>
           {driver.image ? (
-            <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" />
+            <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" style={`object-position: ${driver.imagePosition || 'top'}`} />
           ) : (
             <div class="text-8xl font-black text-zinc-700">
               {driver.number}
