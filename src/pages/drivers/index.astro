@@ -6,19 +6,27 @@ import results from '../../../public/data/results.json';
 import qualifying from '../../../public/data/qualifying.json';
 
 const driversWithStats = drivers.map((driver: any) => {
-  const team = teams.find((t: any) => t.id === driver.teamId);
+  const team = driver.teamId ? teams.find((t: any) => t.id === driver.teamId) : null;
   const driverResults = results.filter((r: any) => r.driverId === driver.id);
   const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
   const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
   const wins = driverResults.filter((r: any) => r.position === 1).length;
   const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).length;
   
-  return { ...driver, team, totalPoints, wins, poles };
+  // Use gray color for reserve drivers
+  const displayTeam = driver.isReserve 
+    ? { id: 0, color: '#71717a', name: 'Reserva', logo: '' }
+    : team;
+  
+  return { ...driver, team: displayTeam, totalPoints, wins, poles };
 });
+
+const regularDrivers = driversWithStats.filter((d: any) => !d.isReserve);
+const reserveDrivers = driversWithStats.filter((d: any) => d.isReserve);
 
 const driversByTeam = teams.map((team: any) => ({
   team,
-  drivers: driversWithStats.filter((d: any) => d.teamId === team.id)
+  drivers: regularDrivers.filter((d: any) => d.teamId === team.id)
 }));
 ---
 
@@ -116,4 +124,61 @@ const driversByTeam = teams.map((team: any) => ({
       </div>
     </div>
   ))}
+
+  {reserveDrivers.length > 0 && (
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold mb-4 border-l-4 pl-4 border-zinc-500 text-zinc-400">
+        Pilotos Reserva
+      </h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {reserveDrivers.map((driver: any) => (
+          <a 
+            href={`/drivers/${driver.id}`} 
+            class={`driver-card bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-800 transition-all group ${driver.number === 33 ? 'driver-33-easter' : ''}`}
+            style={`--team-color: ${driver.team?.color}`}
+            data-driver-number={driver.number}
+          >
+            <div class="h-64 flex items-center justify-center relative overflow-hidden" style={`background: linear-gradient(135deg, ${driver.team?.color}15 0%, ${driver.team?.color}30 100%)`} transition:name={driver.image ? `driver-image-${driver.id}` : `driver-number-${driver.id}`}>
+              {driver.image ? (
+                <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" style={`object-position: ${driver.imagePosition || 'top'}`} />
+              ) : (
+                <div class="driver-number text-8xl font-black text-zinc-700 transition-colors">
+                  {driver.number}
+                </div>
+              )}
+              {driver.number === 33 && (
+                <div class="easter-egg-message">
+                  Como 33? Repiteme ese numerín
+                </div>
+              )}
+              <div class="absolute top-4 right-4 bg-zinc-800/90 backdrop-blur-sm px-3 py-1 rounded-full border border-zinc-600">
+                <span class="text-xs font-bold text-zinc-400 uppercase">Reserva</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="driver-name text-2xl font-bold mb-2 transition-colors" transition:name={`driver-name-${driver.id}`}>{driver.name}</h3>
+              <div class="flex items-center gap-2 mb-4">
+                <span class="w-3 h-3 rounded" style={`background-color: ${driver.team?.color}`}></span>
+                <span class="text-sm text-zinc-400">{driver.team?.name}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <div>
+                  <div class="text-zinc-400">Puntos</div>
+                  <div class="font-bold text-xl">{driver.totalPoints}</div>
+                </div>
+                <div>
+                  <div class="text-zinc-400">Victorias</div>
+                  <div class="font-bold text-xl">{driver.wins}</div>
+                </div>
+                <div>
+                  <div class="text-zinc-400">Poles</div>
+                  <div class="font-bold text-xl">{driver.poles}</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
 </Layout>

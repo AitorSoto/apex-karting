@@ -39,7 +39,7 @@ const fastestLapResult = raceResults
 
 const resultsWithDrivers = raceResults.map((result: any) => {
   const driver = drivers.find((d: any) => d.id === result.driverId);
-  const team = teams.find((t: any) => t.id === driver?.teamId);
+  const team = teams.find((t: any) => t.id === (result.teamId || driver?.teamId));
   return { ...result, driver, team };
 }).sort((a: any, b: any) => a.position - b.position);
 ---

@@ -5,7 +5,8 @@
     "number": 21,
     "teamId": 1,
     "nationality": "ESP",
-    "image": "/images/drivers/aitors.JPG"
+    "image": "/images/drivers/aitors.JPG",
+    "isReserve": false
   },
   {
     "id": 2,
@@ -14,7 +15,8 @@
     "teamId": 1,
     "nationality": "ESP",
     "image": "/images/drivers/ethanc.jpg",
-    "imagePosition": "50% 40%"
+    "imagePosition": "50% 40%",
+    "isReserve": false
   },
   {
     "id": 3,
@@ -22,7 +24,8 @@
     "number": 13,
     "teamId": 2,
     "nationality": "ESP",
-    "image": ""
+    "image": "",
+    "isReserve": false
   },
   {
     "id": 4,
@@ -31,7 +34,8 @@
     "teamId": 4,
     "nationality": "ESP",
     "image": "/images/drivers/estebanb.jpg",
-    "imagePosition": "50% 10%"
+    "imagePosition": "50% 10%",
+    "isReserve": false
   },
   {
     "id": 5,
@@ -39,7 +43,8 @@
     "number": 6,
     "teamId": 5,
     "nationality": "ESP",
-    "image": ""
+    "image": "",
+    "isReserve": false
   },
   {
     "id": 6,
@@ -47,7 +52,8 @@
     "number": 33,
     "teamId": 4,
     "nationality": "USA",
-    "image": ""
+    "image": "",
+    "isReserve": false
   },
   {
     "id": 7,
@@ -56,7 +62,8 @@
     "teamId": 3,
     "nationality": "ESP",
     "image": "/images/drivers/bernio.jpg",
-    "imagePosition": "50% 0%"
+    "imagePosition": "50% 0%",
+    "isReserve": false
   },
   {
     "id": 8,
@@ -65,7 +72,8 @@
     "teamId": 3,
     "nationality": "BEL",
     "image": "/images/drivers/davidb.jpg",
-    "imagePosition": "50% 40%"
+    "imagePosition": "50% 40%",
+    "isReserve": false
   },
   {
     "id": 9,
@@ -74,7 +82,8 @@
     "teamId": 6,
     "nationality": "BEL",
     "image": "/images/drivers/davidp.jpeg",
-    "imagePosition": "50% 10%"
+    "imagePosition": "50% 10%",
+    "isReserve": false
   },
   {
     "id": 10,
@@ -82,7 +91,8 @@
     "number": 7,
     "teamId": 2,
     "nationality": "POR",
-    "image": ""
+    "image": "",
+    "isReserve": false
   },
   {
     "id": 11,
@@ -90,7 +100,8 @@
     "number": 14,
     "teamId": 5,
     "nationality": "ESP",
-    "image": ""
+    "image": "",
+    "isReserve": false
   },
   {
     "id": 12,
@@ -99,7 +110,26 @@
     "teamId": 6,
     "nationality": "ESP",
     "image": "/images/drivers/maelm.jpg",
-    "imagePosition": "50% 50%"
+    "imagePosition": "50% 50%",
+    "isReserve": false
+  },
+  {
+    "id": 13,
+    "name": "Flavio Corpa",
+    "number": 19,
+    "teamId": null,
+    "nationality": "ESP",
+    "image": "",
+    "isReserve": true
+  },
+  {
+    "id": 14,
+    "name": "Asier Soto",
+    "number": 77,
+    "teamId": null,
+    "nationality": "ESP",
+    "image": "",
+    "isReserve": true
   }
 
 ]

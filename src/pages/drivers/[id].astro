@@ -28,9 +28,23 @@ const countryCodeMap: Record<string, string> = {
   'POR': 'pt',
 };
 
-const team = teams.find((t: any) => t.id === driver.teamId);
-if (!team) throw new Error(`Team with id ${driver.teamId} not found`);
+// For reserve drivers, use gray color and find all teams they've raced for
+const defaultTeam = driver.teamId ? teams.find((t: any) => t.id === driver.teamId) : null;
+if (!defaultTeam && !driver.isReserve) {
+  throw new Error(`Team with id ${driver.teamId} not found`);
+}
+
 const driverResults = results.filter((r: any) => r.driverId === driver.id);
+
+// Get unique teams the driver has raced for
+const racedForTeamIds = [...new Set(driverResults.map((r: any) => r.teamId).filter(Boolean))];
+const racedForTeams = racedForTeamIds.map(teamId => teams.find((t: any) => t.id === teamId)).filter(Boolean);
+
+// Use gray for reserve drivers, otherwise use their team color
+const displayColor = driver.isReserve ? '#71717a' : (defaultTeam?.color || '#71717a');
+const team = driver.isReserve 
+  ? { id: 0, color: displayColor, name: 'Piloto Reserva', logo: '' } 
+  : defaultTeam;
 const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
 
 const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
@@ -41,6 +55,7 @@ const poles = driverQualifying.filter((q: any) => q.position === 1 && !q.dnf).le
 const raceHistory = driverResults.map((result: any) => {
   const race = races.find((r: any) => r.id === result.raceId);
   const circuit = circuits.find((c: any) => c.id === race?.circuitId);
+  const raceTeam = teams.find((t: any) => t.id === (result.teamId || driver.teamId));
   const qualyResult: any = driverQualifying.find((q: any) => q.raceId === result.raceId);
   const hadPole = qualyResult?.position === 1 && !qualyResult?.dnf;
   
@@ -52,7 +67,7 @@ const raceHistory = driverResults.map((result: any) => {
   }, null);
   const hadFastestLap = fastestInRace && fastestInRace.driverId === result.driverId && !result.dnf;
   
-  return { ...result, race, circuit, hadPole, hadFastestLap };
+  return { ...result, race, circuit, raceTeam, hadPole, hadFastestLap };
 }).sort((a: any, b: any) => a.race.round - b.race.round);
 
 function hexToRgba(hex: string, alpha: number) {
@@ -109,10 +124,41 @@ const headerTextColor = getContrastColor(team.color);
       <div class="flex-1 text-center md:text-left">
         <div class="text-6xl md:text-7xl font-black mb-4" style={`color: ${team.color}; text-shadow: 0 0 30px ${teamColorRgba40}`} transition:name={driver.image ? '' : `driver-number-${driver.id}`}>#{driver.number}</div>
         <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight" style={`text-shadow: 0 0 20px ${teamColorRgba30}`} transition:name={`driver-name-${driver.id}`}>{driver.name}</h1>
-        <a href={`/teams/${team.id}`} class="inline-flex items-center gap-3 bg-zinc-950/50 backdrop-blur-sm rounded-full px-6 py-3 border border-zinc-700 hover:border-zinc-600 transition-all mb-4 group">
-          <span class="w-4 h-4 rounded-full" style={`background-color: ${team.color}; box-shadow: 0 0 10px ${teamColorRgba40}`}></span>
-          <span class="text-xl font-semibold group-hover:text-white transition-colors" style={`color: ${team.color}`}>{team.name}</span>
-        </a>
+        {!driver.isReserve && defaultTeam && (
+          <a href={`/teams/${defaultTeam.id}`} class="inline-flex items-center gap-3 bg-zinc-950/50 backdrop-blur-sm rounded-full px-6 py-3 border border-zinc-700 hover:border-zinc-600 transition-all mb-4 group">
+            <span class="w-4 h-4 rounded-full" style={`background-color: ${defaultTeam.color}; box-shadow: 0 0 10px ${teamColorRgba40}`}></span>
+            <span class="text-xl font-semibold group-hover:text-white transition-colors" style={`color: ${defaultTeam.color}`}>{defaultTeam.name}</span>
+          </a>
+        )}
+        {driver.isReserve && (
+          <div class="space-y-3 mb-4">
+            <div class="inline-flex items-center gap-2 bg-zinc-800/80 backdrop-blur-sm rounded-full px-5 py-2 border border-zinc-600">
+              <span class="text-zinc-400 text-sm font-bold uppercase">Piloto Reserva</span>
+            </div>
+            <div class="bg-zinc-900/50 backdrop-blur-sm rounded-lg p-4 border border-zinc-700">
+              <div class="text-xs text-zinc-500 uppercase font-bold mb-2">
+                {racedForTeams.length > 0 ? 'Ha corrido para:' : (defaultTeam ? 'Equipo asignado:' : 'Disponible para cualquier equipo')}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {racedForTeams.length > 0 ? (
+                  racedForTeams.map((t: any) => (
+                    <a href={`/teams/${t.id}`} class="inline-flex items-center gap-2 bg-zinc-950/50 backdrop-blur-sm rounded-full px-4 py-2 border border-zinc-700 hover:border-zinc-600 transition-all group">
+                      <span class="w-3 h-3 rounded-full" style={`background-color: ${t.color}`}></span>
+                      <span class="text-sm font-semibold group-hover:text-white transition-colors" style={`color: ${t.color}`}>{t.name}</span>
+                    </a>
+                  ))
+                ) : defaultTeam ? (
+                  <a href={`/teams/${defaultTeam.id}`} class="inline-flex items-center gap-2 bg-zinc-950/50 backdrop-blur-sm rounded-full px-4 py-2 border border-zinc-700 hover:border-zinc-600 transition-all group">
+                    <span class="w-3 h-3 rounded-full" style={`background-color: ${defaultTeam.color}`}></span>
+                    <span class="text-sm font-semibold group-hover:text-white transition-colors" style={`color: ${defaultTeam.color}`}>{defaultTeam.name}</span>
+                  </a>
+                ) : (
+                  <span class="text-sm text-zinc-400">Puede correr para cualquier equipo según necesidad</span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         <div class="flex items-center justify-center md:justify-start gap-2">
           <span class={`fi fi-${countryCodeMap[driver.nationality] || 'xx'} text-4xl shadow-lg`}></span>
         </div>
@@ -174,6 +220,7 @@ const headerTextColor = getContrastColor(team.color);
             <tr>
               <th class="px-4 md:px-6 py-4 text-left font-bold uppercase text-xs md:text-sm" style={`color: ${headerTextColor}`}>Ronda</th>
               <th class="px-4 md:px-6 py-4 text-left font-bold uppercase text-xs md:text-sm" style={`color: ${headerTextColor}`}>Carrera</th>
+              <th class="px-4 md:px-6 py-4 text-left font-bold uppercase text-xs md:text-sm hidden lg:table-cell" style={`color: ${headerTextColor}`}>Equipo</th>
               <th class="px-4 md:px-6 py-4 text-center font-bold uppercase text-xs md:text-sm" style={`color: ${headerTextColor}`}>Pos</th>
               <th class="px-4 md:px-6 py-4 text-center font-bold uppercase text-xs md:text-sm" style={`color: ${headerTextColor}`}>Pts</th>
               <th class="px-4 md:px-6 py-4 text-center font-bold uppercase text-xs md:text-sm hidden md:table-cell" style={`color: ${headerTextColor}`}>V. Rápida</th>
@@ -189,6 +236,12 @@ const headerTextColor = getContrastColor(team.color);
                 <td class="px-4 md:px-6 py-4">
                   <div class="font-bold text-sm md:text-base group-hover:text-white transition-colors">{result.race.name}</div>
                   <div class="text-xs md:text-sm text-zinc-400">{result.circuit.name}</div>
+                </td>
+                <td class="px-4 md:px-6 py-4 hidden lg:table-cell">
+                  <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style={`background-color: ${result.raceTeam?.color}`}></span>
+                    <span class="text-xs md:text-sm" style={`color: ${result.raceTeam?.color}`}>{result.raceTeam?.name}</span>
+                  </div>
                 </td>
                 <td class="px-4 md:px-6 py-4 text-center">
                   <span class={`inline-flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full font-bold text-sm md:text-lg ${

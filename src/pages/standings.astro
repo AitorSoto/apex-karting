@@ -24,11 +24,10 @@ const driverStandings = drivers.map((driver: any) => {
 
 // Calculate team standings
 const teamStandings = teams.map((team: any) => {
-  const teamDrivers = drivers.filter((d: any) => d.teamId === team.id);
-  const teamPoints = teamDrivers.reduce((sum: number, driver: any) => {
-    const driverResults = results.filter((r: any) => r.driverId === driver.id);
-    return sum + driverResults.reduce((s: number, r: any) => s + r.points, 0);
-  }, 0);
+  // Count points from results where the driver raced for this team
+  const teamPoints = results
+    .filter((r: any) => (r.teamId || drivers.find((d: any) => d.id === r.driverId)?.teamId) === team.id)
+    .reduce((sum: number, r: any) => sum + r.points, 0);
   
   return {
     ...team,
@@ -61,7 +60,8 @@ const teamStandings = teams.map((team: any) => {
           </thead>
           <tbody>
             {driverStandings.map((driver: any, index: number) => {
-              const team = teams.find((t: any) => t.id === driver.teamId);
+              const team = driver.teamId ? teams.find((t: any) => t.id === driver.teamId) : null;
+              const displayTeam = driver.isReserve ? { color: '#71717a', name: 'Reserva' } : team;
               return (
                 <tr class="border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
                   <td class="px-6 py-4 font-bold text-2xl" style={`color: ${index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white'}`}>
@@ -74,7 +74,7 @@ const teamStandings = teams.map((team: any) => {
                     <div class="text-sm text-zinc-400">#{driver.number}</div>
                   </td>
                   <td class="px-6 py-4">
-                    <span class="text-sm" style={`color: ${team?.color}`}>{team?.name}</span>
+                    <span class="text-sm" style={`color: ${displayTeam?.color || '#71717a'}`}>{displayTeam?.name || 'Sin equipo'}</span>
                   </td>
                   <td class="px-6 py-4 text-center font-bold text-xl">{driver.points}</td>
                   <td class="px-6 py-4 text-center">{driver.wins}</td>

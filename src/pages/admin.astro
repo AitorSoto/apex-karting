@@ -263,7 +263,7 @@ import Layout from '../layouts/Layout.astro';
     availableDiv.innerHTML = availableDrivers.map(driver => {
       const team = teams.find(t => t.id === driver.teamId);
       return `
-        <div class="driver-card bg-zinc-900 p-3 rounded border-2 border-zinc-700 cursor-move hover:border-red-600 transition-all" data-driver-id="${driver.id}">
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 border-zinc-700 cursor-move hover:border-red-600 transition-all" data-driver-id="${driver.id}" data-team-id="${driver.teamId}">
           <div class="flex items-center justify-between">
             <div>
               <div class="font-bold">#${driver.number} ${driver.name}</div>
@@ -279,11 +279,11 @@ import Layout from '../layouts/Layout.astro';
     const resultsDiv = document.getElementById('raceResultsList')!;
     resultsDiv.innerHTML = raceResults.map((result, index) => {
       const driver = drivers.find(d => d.id === result.driverId);
-      const team = teams.find(t => t.id === driver?.teamId);
+      const team = teams.find(t => t.id === (result.teamId || driver?.teamId));
       const points = calculatePoints(index + 1, result.dnf);
       
       return `
-        <div class="driver-card bg-zinc-900 p-3 rounded border-2 ${result.dnf ? 'border-red-700' : 'border-green-700'} cursor-move hover:border-green-500 transition-all" data-driver-id="${driver?.id}">
+        <div class="driver-card bg-zinc-900 p-3 rounded border-2 ${result.dnf ? 'border-red-700' : 'border-green-700'} cursor-move hover:border-green-500 transition-all" data-driver-id="${driver?.id}" data-team-id="${result.teamId || driver?.teamId}">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <div class="text-2xl font-black ${result.dnf ? 'text-red-500' : 'text-yellow-500'}">${result.dnf ? 'DNF' : index + 1}</div>
@@ -379,6 +379,7 @@ import Layout from '../layouts/Layout.astro';
     // Add new results based on drag order
     driverCards.forEach((card, index) => {
       const driverId = parseInt(card.getAttribute('data-driver-id')!);
+      const teamId = parseInt(card.getAttribute('data-team-id')!);
       const position = index + 1;
       const points = calculatePoints(position);
       
@@ -388,6 +389,7 @@ import Layout from '../layouts/Layout.astro';
       results.push({
         raceId: currentRaceId!,
         driverId,
+        teamId,
         position,
         points,
         fastestLap: existingResult?.fastestLap || false,
