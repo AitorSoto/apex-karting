@@ -73,7 +73,8 @@
     "number": 67,
     "teamId": 6,
     "nationality": "BEL",
-    "image": ""
+    "image": "/images/drivers/davidp.jpeg",
+    "imagePosition": "50% 10%"
   },
   {
     "id": 10,
