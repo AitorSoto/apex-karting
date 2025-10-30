@@ -127,10 +127,22 @@ const driversByTeam = teams.map((team: any) => ({
 
   {reserveDrivers.length > 0 && (
     <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4 border-l-4 pl-4 border-zinc-500 text-zinc-400">
-        Pilotos Reserva
-      </h2>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div class="flex items-center gap-4 my-12">
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent"></div>
+        <div class="flex items-center gap-2 px-6 py-3 bg-zinc-800/50 backdrop-blur-sm rounded-full border border-zinc-700">
+          <span class="text-2xl">🏁</span>
+          <span class="text-xl font-black text-zinc-400 uppercase tracking-wide">Pilotos Reserva</span>
+        </div>
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent"></div>
+      </div>
+      
+      <div class="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border-2 border-zinc-800">
+        <div class="mb-6">
+          <p class="text-sm text-zinc-400 text-center max-w-2xl mx-auto">
+            Pilotos disponibles para sustituir a los titulares en caso de ausencia. Pueden competir para cualquier equipo según necesidad.
+          </p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {reserveDrivers.map((driver: any) => (
           <a 
             href={`/drivers/${driver.id}`} 
@@ -178,6 +190,7 @@ const driversByTeam = teams.map((team: any) => ({
             </div>
           </a>
         ))}
+        </div>
       </div>
     </div>
   )}
