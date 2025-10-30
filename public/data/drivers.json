@@ -98,7 +98,8 @@
     "number": 9,
     "teamId": 6,
     "nationality": "ESP",
-    "image": ""
+    "image": "/images/drivers/maelm.jpg",
+    "imagePosition": "50% 50%"
   }
 
 ]
