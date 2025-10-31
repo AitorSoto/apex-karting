@@ -119,7 +119,8 @@
     "number": 19,
     "teamId": null,
     "nationality": "ESP",
-    "image": "",
+    "image": "/images/drivers/flavioc.jpg",
+    "imagePosition": "50% 30%",
     "isReserve": true
   },
   {
