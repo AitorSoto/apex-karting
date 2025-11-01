@@ -131,6 +131,16 @@
     "nationality": "ESP",
     "image": "",
     "isReserve": true
+  },
+  {
+    "id": 15,
+    "name": "Beti",
+    "number": 15,
+    "teamId": null,
+    "nationality": "ESP",
+    "image": "/images/drivers/beti.jpg",
+    "imagePosition": "50% 27%",
+    "isReserve": true
   }
 
 ]
