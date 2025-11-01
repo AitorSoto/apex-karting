@@ -44,7 +44,7 @@ const racedForTeams = racedForTeamIds.map(teamId => teams.find((t: any) => t.id 
 const displayColor = driver.isReserve ? '#71717a' : (defaultTeam?.color || '#71717a');
 const team = driver.isReserve 
   ? { id: 0, color: displayColor, name: 'Piloto Reserva', logo: '' } 
-  : defaultTeam;
+  : (defaultTeam || { id: 0, color: '#71717a', name: 'Sin equipo', logo: '' });
 const driverQualifying = qualifying.filter((q: any) => q.driverId === driver.id);
 
 const totalPoints = driverResults.reduce((sum: number, r: any) => sum + r.points, 0);
@@ -86,12 +86,45 @@ function getContrastColor(hex: string) {
   return luminance > 0.5 ? '#000000' : '#ffffff';
 }
 
+function getOverlayColor(hex: string) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  if (luminance < 0.3) {
+    return 'rgba(255, 255, 255, 0.08)';
+  } else if (luminance > 0.7) {
+    return 'rgba(0, 0, 0, 0.5)';
+  } else {
+    return 'rgba(0, 0, 0, 0.4)';
+  }
+}
+
+function getSilhouetteColor(hex: string) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  // Return a color with good contrast against the team color
+  if (luminance < 0.4) {
+    // Dark team color -> use light silhouette
+    return 'rgba(255, 255, 255, 0.15)';
+  } else {
+    // Light/medium team color -> use dark silhouette
+    return 'rgba(0, 0, 0, 0.2)';
+  }
+}
+
 const teamColorRgba20 = hexToRgba(team.color, 0.12);
 const teamColorRgba15 = hexToRgba(team.color, 0.08);
 const teamColorRgba50 = hexToRgba(team.color, 0.3);
 const teamColorRgba40 = hexToRgba(team.color, 0.25);
 const teamColorRgba30 = hexToRgba(team.color, 0.18);
 const headerTextColor = getContrastColor(team.color);
+const overlayColor = getOverlayColor(team.color);
+const silhouetteColor = getSilhouetteColor(team.color);
 ---
 
 <Layout 
@@ -114,9 +147,9 @@ const headerTextColor = getContrastColor(team.color);
       pointer-events: none;
     }
   </style>
-  <a href="/drivers" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors">
-    ← Volver a Pilotos
-  </a>
+  <button onclick="history.back()" class="inline-block mb-6 text-red-500 hover:text-red-400 transition-colors cursor-pointer">
+    ← Volver atrás
+  </button>
 
   <div class="driver-header relative rounded-2xl p-8 md:p-10 mb-8 shadow-2xl overflow-visible" style={`--team-color: ${team.color}; background: linear-gradient(135deg, ${teamColorRgba20} 0%, #18181b 30%, #18181b 70%, ${teamColorRgba15} 100%)`}>
     <div class="absolute top-0 left-0 w-full h-full rounded-2xl opacity-40 pointer-events-none" style={`background: radial-gradient(circle at 20% 50%, ${teamColorRgba50} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${teamColorRgba40} 0%, transparent 50%)`}></div>
@@ -163,25 +196,31 @@ const headerTextColor = getContrastColor(team.color);
           <span class={`fi fi-${countryCodeMap[driver.nationality] || 'xx'} text-4xl shadow-lg`}></span>
         </div>
       </div>
-      {driver.image && (
-        <div class="relative group">
-          <div class="absolute -inset-4 blur-3xl opacity-50 group-hover:opacity-70 transition-all duration-500" style={`background: linear-gradient(135deg, ${team.color}, transparent)`}></div>
-          
-          <div class="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden shadow-2xl" style="clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);" transition:name={`driver-image-${driver.id}`}>
+      <div class="relative group">
+        <div class="absolute -inset-4 blur-3xl opacity-50 group-hover:opacity-70 transition-all duration-500" style={`background: linear-gradient(135deg, ${team.color}, transparent)`}></div>
+        
+        <div class="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden shadow-2xl" style="clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);" transition:name={`driver-image-${driver.id}`}>
+          {driver.image ? (
             <img src={driver.image} alt={driver.name} class="w-full h-full object-cover" style={`object-position: ${driver.imagePosition || 'top'}`} />
-
-            <div class="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
-            
-            <!-- Driver number in bottom-right corner -->
-            <div class="absolute bottom-2 right-2 flex items-center justify-center" style={`background: ${team.color}; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);`}>
-              <span class="text-4xl md:text-5xl font-black px-4 py-2 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">#{driver.number}</span>
+          ) : (
+            <div class="w-full h-full flex items-center justify-center" style={`background: linear-gradient(135deg, ${team.color}15 0%, ${team.color}30 100%)`}>
+              <svg class="w-40 h-40 md:w-48 md:h-48" viewBox="0 0 24 24" fill="currentColor" style={`color: ${silhouetteColor}`}>
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
             </div>
-            
-            <div class="absolute bottom-0 left-0 w-full h-1 opacity-80" style={`background: linear-gradient(90deg, ${team.color}, transparent)`}></div>
+          )}
+
+          <div class="absolute inset-0" style={`background: linear-gradient(to top right, ${overlayColor} 0%, transparent 40%)`}></div>
+          <div class="absolute inset-0" style={`background: linear-gradient(to bottom, transparent 0%, transparent 60%, ${overlayColor} 100%)`}></div>
+          
+          <!-- Driver number in bottom-right corner -->
+          <div class="absolute bottom-2 right-2 flex items-center justify-center shadow-2xl" style={`background: ${team.color}; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);`}>
+            <span class="text-4xl md:text-5xl font-black px-4 py-2 text-white" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">#{driver.number}</span>
           </div>
+          
+          <div class="absolute bottom-0 left-0 w-full h-1 opacity-80" style={`background: linear-gradient(90deg, ${team.color}, transparent)`}></div>
         </div>
-      )}
+      </div>
     </div>
   </div>
 

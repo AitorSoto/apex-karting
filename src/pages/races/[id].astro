@@ -45,8 +45,8 @@ const resultsWithDrivers = raceResults.map((result: any) => {
 ---
 
 <Layout title={`${race.name} - Apex Karting`}>
-  <a href="/races" class="inline-block mb-4 md:mb-6 text-red-500 hover:text-red-400 transition-colors text-sm md:text-base">
-    ← Volver a Carreras
+  <a onclick="history.back()" class="inline-block mb-4 md:mb-6 text-red-500 hover:text-red-400 transition-colors text-sm md:text-base">
+    ← Volver atrás
   </a>
 
   <div class="bg-zinc-900 rounded-lg p-4 md:p-8 mb-6 md:mb-8 border-l-4 border-red-600">
